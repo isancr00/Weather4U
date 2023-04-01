@@ -2,33 +2,12 @@ version: '3.1'
 
 services:
 
-  usuarios:
-    build: 
-      context: Usuarios
-      dockerfile: Dockerfile     
-    ports:
-      - "8010:1001"
-
-  ciudades:
-    build: 
-      context: Ciudades
-      dockerfile: Dockerfile     
-    ports:
-      - "8020:1002"
-  
-  aplicacion:
-    build: 
-      context: Aplicacion
-      dockerfile: Dockerfile     
-    ports:
-      - "8030:1003"
-  
   tiempo:
     build: 
-      context: Aplicacion
+      context: Tiempo
       dockerfile: Dockerfile     
     ports:
-      - "8030:1003"
+      - "8030:3000"
   
 
 volumes:
