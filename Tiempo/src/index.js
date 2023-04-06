@@ -8,29 +8,74 @@ adminRouter.get('/amanecerAtardecer/:coordenadas',function(req,res){
     manejadoraAmanecerAtardecer(req.params.coordenadas,res);
 });
 
+adminRouter.get('/temperatura/:coordenadas',function(req,res){
+  console.log("Datos temperatura");
+  manejadoraEvolucionTemperatura(req.params.coordenadas,res);
+});
+
+adminRouter.get('/precipitaciones/:coordenadas',function(req,res){
+  console.log("Datos precipitaciones");
+  manejadoraEvolucionPrecipitaciones(req.params.coordenadas,res);
+});
+
 app.use(adminRouter);
 
 async function manejadoraAmanecerAtardecer(coordenadas,res){
-    var data;
-    var coordenadasSplit = coordenadas.split('_');
-    var latitud = coordenadasSplit[0];
-    var longitud = coordenadasSplit[1];
+  var coordenadasSplit = coordenadas.split('_');
+  var latitud = coordenadasSplit[0];
+  var longitud = coordenadasSplit[1];
 
-    const url = "https://api.sunrise-sunset.org/json?lat="+ latitud +'&lng=' + longitud;
-    console.log(url);   
+  const url = "https://api.sunrise-sunset.org/json?lat="+ latitud +'&lng=' + longitud;
+  console.log(url);   
 
-    makeGetRequest(url, (error, data) => {
-        if (error) {
-          console.error(error);
-        } else {
-            console.log("Peticion realizada con exito")
-            res.send(data);
-        }
-      });
+  peticionGet(url, (error, data) => {
+      if (error) {
+        console.error(error);
+      } else {
+          console.log("Peticion realizada con exito")
+          res.send(data);
+      }
+    });
     
 }
 
-function makeGetRequest(url, callback) {
+
+async function manejadoraEvolucionTemperatura(coordenadas,res){
+  var coordenadasSplit = coordenadas.split('_');
+  var latitud = coordenadasSplit[0];
+  var longitud = coordenadasSplit[1];
+  const url = " https://api.open-meteo.com/v1/forecast?latitude="+ latitud +'&longitude=' + longitud + "&hourly=temperature_2m";
+  console.log(url);   
+
+  peticionGet(url, (error, data) => {
+    if (error) {
+      console.error(error);
+    } else {
+        console.log("Peticion realizada con exito")
+        res.send(data);
+    }
+  });
+}
+
+async function manejadoraEvolucionPrecipitaciones(coordenadas,res){
+  var coordenadasSplit = coordenadas.split('_');
+  var latitud = coordenadasSplit[0];
+  var longitud = coordenadasSplit[1];
+  const url = " https://api.open-meteo.com/v1/forecast?latitude="+ latitud +'&longitude=' + longitud + "&hourly=precipitation_probability";
+  console.log(url);   
+
+  peticionGet(url, (error, data) => {
+    if (error) {
+      console.error(error);
+    } else {
+        console.log("Peticion realizada con exito")
+        res.send(data);
+    }
+  });
+}
+
+
+function peticionGet(url, callback) {
   https.get(url, (response) => {
     let data = '';
     
