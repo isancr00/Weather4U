@@ -1,1 +1,48 @@
-Hola esto es la app
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <script src="script.js"></script>
+        <title>Weather4U</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </head>
+
+    <body>   
+        <header class="header">
+            <div>
+                <span>Weather4U</span>
+            </div>
+            <div class="search-container">
+                <i class="material-icons">search</i>
+                <input type="text" placeholder="Buscar...">
+                <button type="submit">
+                    <i class="material-icons">search</i>
+                </button>
+            </div>
+            <div onclick="mostrarFormularioInicioSesion()">
+                <i class="material-icons">account_circle</i>
+                <span id="inicio-usuario">Iniciar sesión</span>
+            </div>
+        </header>
+        <main>
+            <div id="login-form" style="display:none;">
+                <p>Inicio de sesión/Registro</p>
+                <p>Email</p>
+                <input type="text" id="iniciosesion-email" placeholder="email">
+                <p>Contraseña</p>
+                <input type="password" id="iniciosesion-contraseña" placeholder="contraseña">
+                <p></p>
+                <button onclick="iniciarSesion()">Iniciar sesión</button>
+                <button onclick="registrarse()">Registrarse</button>
+
+            </div>
+        </main>
+    </body>
+
+
+
+
+
+</html>
