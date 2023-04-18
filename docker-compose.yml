@@ -13,6 +13,13 @@ services:
       - MYSQL_PASSWORD=password
     volumes:
       - mysql_data:/var/lib/mysql  
+  
+  aplicacion:
+    build: 
+      context: Aplicacion
+      dockerfile: Dockerfile     
+    ports:
+      - "8020:4000"
 
   tiempo:
     build: 

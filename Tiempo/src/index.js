@@ -23,7 +23,6 @@ adminRouter.get('/tiempo/:coordenadas',function(req,res){
   manejadoraEvolucionTiempoGeneral(req.params.coordenadas,res);
 });
 
-
 app.use(adminRouter);
 
 async function manejadoraAmanecerAtardecer(coordenadas,res){
@@ -38,7 +37,7 @@ async function manejadoraAmanecerAtardecer(coordenadas,res){
       if (error) {
         console.error(error);
       } else {
-          console.log("Peticion realizada con exito")
+          console.log("Peticion realizada con exito");
           res.send(data);
       }
     });
