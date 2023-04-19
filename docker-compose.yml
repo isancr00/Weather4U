@@ -1,19 +1,6 @@
 version: '3.1'
 
 services:
-
-  mysql:
-    image: mysql:8.0
-    ports:
-      - 3306:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=database
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
-    volumes:
-      - mysql_data:/var/lib/mysql  
-  
   aplicacion:
     build: 
       context: Aplicacion
@@ -27,7 +14,3 @@ services:
       dockerfile: Dockerfile     
     ports:
       - "8030:3000"
-  
-
-volumes:
-  mysql_data:

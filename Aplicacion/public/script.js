@@ -1,11 +1,6 @@
 function mostrarFormularioInicioSesion(){
-
-    if(document.getElementById("inicio-usuario").value == "Iniciar Sesion"){
         var formularioSesion = document.getElementById("login-form");
         formularioSesion.style.display = "block";
-    }else{
-        //Cerrar la sesión
-    }
 }
 
 function registrarse(){
@@ -30,6 +25,8 @@ function iniciarSesion(){
 
         //A continuación cambiamos el iniciar sesión por el nombre del usuario.
         document.getElementById("inicio-usuario").innerText = "Rosa Bonito";
+    }else{
+        alert("Los datos son incorrectos.")
     }
 
 
