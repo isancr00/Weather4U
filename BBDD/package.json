@@ -1,7 +1,7 @@
 {
-  "name": "aplicacion",
+  "name": "bbdd",
   "version": "1.0.0",
-  "description": "WebApp (main)",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js"
@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "ex": "^0.1.4",
     "express": "^4.18.2",
-    "https": "^1.0.0",
-    "morgan": "^1.10.0"
+    "mongoose": "^7.0.4"
   }
 }

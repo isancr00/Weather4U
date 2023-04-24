@@ -7,28 +7,17 @@ function registrarse(){
     alert("Ha pulsado registrarse");
 }
 
-function iniciarSesion(){
+function ejemplo(){
+    var datos = 'Hola que tal';
+    var url = 'http://localhost:8010/insertar/' + datos;
+    fetch(url,{
+        method : 'POST',
+        headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:8010',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          },
+        
+    })
 
-    var email = document.getElementById("iniciosesion-email").value;
-    var contraseña = document.getElementById("iniciosesion-contraseña").value;
-
-    console.log(email);
-    console.log(contraseña);
-
-
-    //Esto habria que hacerlo consultando a la base de datos pero es para tener algo en el front
-    if(email == "rosa@gmail.com" && contraseña == "bonito23"){
-        //Se ha iniciado sesión
-        //Primero ocultamos el formulario
-        var formularioSesion = document.getElementById("login-form");
-        formularioSesion.style.display = "none";
-
-        //A continuación cambiamos el iniciar sesión por el nombre del usuario.
-        document.getElementById("inicio-usuario").innerText = "Rosa Bonito";
-    }else{
-        alert("Los datos son incorrectos.")
-    }
-
-
-    alert("Ha pulsado iniciar sesión");
 }
