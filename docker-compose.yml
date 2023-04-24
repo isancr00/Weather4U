@@ -13,17 +13,17 @@ services:
   
   bbdd:
     build: 
-      context: Aplicacion
+      context: BBDD
       dockerfile: Dockerfile     
     ports:
-      - "8010:5000"
+      - "8010:4000"
 
   aplicacion:
     build: 
       context: Aplicacion
       dockerfile: Dockerfile     
     ports:
-      - "8020:4000"
+      - "8020:5000"
 
   tiempo:
     build: 
