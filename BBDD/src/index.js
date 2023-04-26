@@ -7,11 +7,11 @@ adminRouter.post('/insertar/:datos', function(req,res){
     res.send("Insertada")
     console.log(req.params.datos)
     insertarUsuario(req.params.datos)
-});
+})
 
-adminRouter.get('/usuarios', function(req,res){
-    getUsuarios(res)
-});
+adminRouter.post('/comprobarUsuario',function(req,res){
+    comprobarUsuario(req,res);
+})
 
 app.use(adminRouter);
 
@@ -46,9 +46,21 @@ async function insertarUsuario(datos){
     await paco.save().then(() => console.log("Paco añadido"));
 }
 
-async function getUsuarios(res){
-    const resultado = await Usuario.find();
-    res.send(resultado);
+async function comprobarUsuario(req,res){
+
+    var email = req.body.email;
+    var contraseña = req.body.contraseña;
+    
+    await Usuario.find({email:email,contraseña:contraseña}).exec()
+    .then((usuario) => {
+        console.log(usuario);
+    })
+    .catch((err) => {
+        console.error(err);
+    });
+
+
+    res.send("Correcto");
 }
 
 

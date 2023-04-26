@@ -6,7 +6,7 @@ function mostrarFormularioInicioSesion(){
 function iniciarSesion(){
     var email = document.getElementById("iniciosesion-email").value;
     var contraseña = document.getElementById("iniciosesion-contraseña").value;
-    console.log(contraseña);
+    console.log(JSON.stringify({email: email, contraseña:contraseña}));
 
     //Hay que hacer una petición get a el microservicio de usuarios para comprobar que existe un usuario con dicho email y contraseña.
     var url = "http://localhost:8040/comprobarUsuario"
