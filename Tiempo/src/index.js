@@ -126,7 +126,7 @@ function peticionGet(url, callback) {
 
 async function main(){
     await app.listen(3000);
-    console.log('Server is running');
+    console.log('Weather server is running');
 }
 
 main();

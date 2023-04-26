@@ -10,7 +10,7 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
-  
+
   bbdd:
     build: 
       context: BBDD
@@ -31,6 +31,13 @@ services:
       dockerfile: Dockerfile     
     ports:
       - "8030:3000"
+
+  usuarios:
+    build:
+      context: Usuarios
+      dockerfile: Dockerfile
+    ports:
+      - "8040:6000"
 
 volumes:
   mongodb_data_container:
