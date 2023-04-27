@@ -93,16 +93,7 @@ async function manejadoraEvolucionPrecipitaciones1Dia(coordenadas,res){
   const url = " https://api.open-meteo.com/v1/forecast?latitude="+ latitud +'&longitude=' + longitud + "&hourly=precipitation_probability&forecast_days=1";
   console.log(url);   
 
-  peticionGet(url, (error, data) => {
-    if (error) {
-      console.error(error);
-    } else {
-        console.log("Peticion realizada con exito")
-        var resultado_json = JSON.parse(data);
-        var resultado = resultado_json.hourly.precipitation_probability;
-        res.send(resultado);
-    }
-  });
+  
 }
 
 
