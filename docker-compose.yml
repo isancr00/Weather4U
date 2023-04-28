@@ -16,7 +16,7 @@ services:
       context: BBDD
       dockerfile: Dockerfile     
     ports:
-      - "8010:4000"
+      - "8010:7000"
 
   aplicacion:
     build: 
@@ -31,13 +31,6 @@ services:
       dockerfile: Dockerfile     
     ports:
       - "8030:3000"
-
-  usuarios:
-    build:
-      context: Usuarios
-      dockerfile: Dockerfile
-    ports:
-      - "8040:6000"
 
 volumes:
   mongodb_data_container:

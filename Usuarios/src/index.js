@@ -1,54 +1,21 @@
 const app = require('./app');
 const express = require('express');
-const http = require('http');
 var adminRouter = express.Router();
 
 adminRouter.post('/comprobarUsuario',function(req,res){
-    comprobarUsuario(req,res);
+    var resultado = comprobarUsuario(req.body.email,req.body.contraseña);
+    res.send(resultado);
 });
 
 app.use(adminRouter);
 
 
 
-function comprobarUsuario(req,res){
+function comprobarUsuario(email,contraseña){
     
-    var url = "http://localhost:8010/comprobarUsuario/" + req.body.email + "_" + req.body.contraseña;
-        
-    
-    peticionGet(url, (error, data) => {
-        if (error) {
-          console.error(error);
-        } else {
-            console.log("Peticion realizada con exito")
-            if(data == []){
-                res.send("No existe");
-            }else{
-                res.send("Existe");
-            }
-        }
-      });
+    var url = "http://127.0.0.1:8010/comprobarUsuario/" + email + "_" + contraseña;
+    //Aqui va la peticion
 }
-
-
-function peticionGet(url, callback) {
-    http.get(url, (response) => {
-      let data = '';
-      
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
-  
-      response.on('end', () => {
-        callback(null, data);
-      });
-  
-    }).on('error', (error) => {
-      callback(error, null);
-    });
-  }
-  
-
   
 async function main(){
     await app.listen(6000);

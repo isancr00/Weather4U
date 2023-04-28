@@ -8,17 +8,36 @@ function iniciarSesion(){
     var contraseña = document.getElementById("iniciosesion-contraseña").value;
     console.log(JSON.stringify({email: email, contraseña:contraseña}));
 
-    //Hay que hacer una petición get a el microservicio de usuarios para comprobar que existe un usuario con dicho email y contraseña.
-    var url = "http://localhost:8040/comprobarUsuario"
+    var url = "http://localhost:8010/comprobarUsuario/" + email + "_" + contraseña;
+    var xhr = new XMLHttpRequest();
 
-    //Lo hacemos como una petición post para ocultar la contraseña
+    xhr.open('GET', url, true);
+
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log(xhr.response);
+        }
+        else {
+            console.log('Error en la petición');
+        }
+    };
+
+    xhr.send();
+
+/*
     fetch(url,{
         method: 'POST',
         body: JSON.stringify({ email: email, contraseña:contraseña }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
     .catch(error => console.error(error));
+*/
+
+
 
     //Aquí habría que cambiar el botón de inicio de sesión por un menú que nos permita cerrar la sesión y obtener la info del usuario.
 }
