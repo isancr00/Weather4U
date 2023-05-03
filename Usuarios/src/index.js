@@ -15,14 +15,12 @@ app.use(adminRouter);
 
 function comprobarUsuario(email,contraseña){
 
-
-    //EL ERROR ESTÁ AQUÍ
-    var url = "http://172.30.0.1:8010/comprobarUsuario/" + email + "_" + contraseña;
+    var url = "http://bbdd:7000/comprobarUsuario/" + email + "_" + contraseña;
     //Aqui va la peticion
     axios.get(url)
         .then(function(response){
-            console.log(response);
-            return resultado;
+            console.log(response.data);
+            return response.data;
         })
         .catch(function(error){
             console.error(error);

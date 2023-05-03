@@ -3,31 +3,14 @@ function mostrarFormularioInicioSesion(){
         formularioSesion.style.display = "block";
 }
 
-async function iniciarSesion(){
+function iniciarSesion(){
     var email = document.getElementById("iniciosesion-email").value;
     var contraseña = document.getElementById("iniciosesion-contraseña").value;
-   /* console.log(JSON.stringify({email: email, contraseña:contraseña}));
-
-    var url = "http://localhost:8010/comprobarUsuario/" + email + "_" + contraseña;
-    var xhr = new XMLHttpRequest();
-
-    xhr.open('GET', url, true);
-
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            console.log(xhr.response);
-        }
-        else {
-            console.log('Error en la petición');
-        }
-    };
-
-    xhr.send();*/
 
     var url = "http://localhost:8040/comprobarUsuario/"
 
     if(email != "" && contraseña !=""){
-        await fetch(url,{
+        fetch(url,{
             method: 'POST',
             body: JSON.stringify({ email: email, contraseña:contraseña }),
             headers: { 'Content-Type': 'application/json' }
