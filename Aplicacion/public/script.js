@@ -3,10 +3,10 @@ function mostrarFormularioInicioSesion(){
         formularioSesion.style.display = "block";
 }
 
-function iniciarSesion(){
+async function iniciarSesion(){
     var email = document.getElementById("iniciosesion-email").value;
     var contraseña = document.getElementById("iniciosesion-contraseña").value;
-    console.log(JSON.stringify({email: email, contraseña:contraseña}));
+   /* console.log(JSON.stringify({email: email, contraseña:contraseña}));
 
     var url = "http://localhost:8010/comprobarUsuario/" + email + "_" + contraseña;
     var xhr = new XMLHttpRequest();
@@ -22,24 +22,31 @@ function iniciarSesion(){
         }
     };
 
-    xhr.send();
+    xhr.send();*/
 
-/*
-    fetch(url,{
-        method: 'POST',
-        body: JSON.stringify({ email: email, contraseña:contraseña }),
-        headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => console.error(error));
-*/
+    var url = "http://localhost:8040/comprobarUsuario/"
+
+    if(email != "" && contraseña !=""){
+        await fetch(url,{
+            method: 'POST',
+            body: JSON.stringify({ email: email, contraseña:contraseña }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error(error));
+        //Aquí habría que cambiar el botón de inicio de sesión por un menú que nos permita cerrar la sesión y obtener la info del usuario.
+
+    }else{
+        alert("Ambos campos son obligatorios");
+    }
 
 
 
-    //Aquí habría que cambiar el botón de inicio de sesión por un menú que nos permita cerrar la sesión y obtener la info del usuario.
+
+
 }
 
 function cambiarARegistro(){
