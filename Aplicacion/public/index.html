@@ -17,7 +17,7 @@
             <div class="search-container">
                 <i class="material-icons">search</i>
                 <input type="text" placeholder="Buscar...">
-                <button type="submit">
+                <button type="submit" onclick="buscar()">
                     <i class="material-icons">search</i>
                 </button>
             </div>
@@ -28,7 +28,9 @@
         </header>
         <main>
             <div id="login-form" style="display:none;">
+                <div onclick="cerrarFormularioInicioSesion()"><i class="material-icons">close</i></div>
                 <p>Inicio de sesión/Registro</p>
+                <p id="alerta" style="color: red;"></p>
                 <p>Email</p>
                 <input type="text" id="iniciosesion-email" placeholder="email">
                 <p>Contraseña</p>
@@ -38,6 +40,16 @@
                 <button onclick="cambiarARegistro()">Registrarse</button>
 
             </div>
+
+            <div id="informacion">
+                <p>Bienvenido a Weather4u, tu aplicación del tiempo favorita.</p>
+                <p>Para comenzar, inicie sesión, o introduzca el nombre de una ciudad en el cuadro de búsqueda.</p>
+                <p>Estar registrado le permite almacenar sus ciudades preferidas, y obtener sus datos meteorológicos de una manera
+                    más accesible.
+                </p>
+            </div>
+
+
         </main>
     </body>
 

@@ -35,8 +35,9 @@ async function comprobarUsuario(datos,res){
     
     await Usuario.find({email:email,contraseña:contraseña}).exec()
     .then((usuario) => {
-        console.log(usuario);
-        res.send(usuario);
+        var enviar = {usuario: usuario}; 
+        console.log(JSON.stringify(enviar));
+        res.send(JSON.stringify(enviar));
     })
     .catch((err) => {
         console.error(err);

@@ -5,26 +5,23 @@ var adminRouter = express.Router();
 
 
 adminRouter.post('/comprobarUsuario',function(req,res){
-    var resultado = comprobarUsuario(req.body.email,req.body.contraseña);
-    res.send(resultado);
+    comprobarUsuario(req.body.email,req.body.contraseña,res);
 });
 
 app.use(adminRouter);
 
 
 
-function comprobarUsuario(email,contraseña){
+function comprobarUsuario(email,contraseña,res){
 
     var url = "http://bbdd:7000/comprobarUsuario/" + email + "_" + contraseña;
     //Aqui va la peticion
     axios.get(url)
-        .then(function(response){
-            console.log(response.data);
-            return response.data;
-        })
-        .catch(function(error){
-            console.error(error);
-        });
+    .then(function(response){
+        const data = response.data;
+        console.log(data);
+        res.send(data);
+    });
 }
 
   
