@@ -7,6 +7,9 @@ adminRouter.get('/comprobarUsuario/:datos',function(req,res){
     comprobarUsuario(req.params.datos,res);
 })
 
+adminRouter.get('/registrarUsuario/:datos',function(req,res){
+    registrarUsuario(req.params.datos);
+})
 app.use(adminRouter);
 
 
@@ -32,19 +35,29 @@ async function comprobarUsuario(datos,res){
     var datosSplit = datos.split("_");
     var email = datosSplit[0];
     var contraseña = datosSplit[1];
-    
-    await Usuario.find({email:email,contraseña:contraseña}).exec()
-    .then((usuario) => {
-        var enviar = {usuario: usuario}; 
-        console.log(JSON.stringify(enviar));
-        res.send(JSON.stringify(enviar));
-    })
-    .catch((err) => {
-        console.error(err);
-    });
 
+    const result = await Usuario.find({email:email,contraseña:contraseña});
+    console.log(result);
+    res.send(JSON.stringify(result));
 }
 
+
+async function registrarUsuario(datos){
+
+    var datosSplit = datos.split("_");
+    var email = datosSplit[1];
+    var contraseña = datosSplit[2];
+    var nombreCompleto = datosSplit[0];
+
+    console.log("Los datos han llegado:" + email +" " + contraseña +" " + nombreCompleto);
+    //LLEGAMOS
+    //HAY QUE INSERTAR USUARIO
+
+    const insertar = new Usuario({email:email, contraseña:contraseña, nombreCompleto: nombreCompleto, ciudades:[]});
+    insertar.save().then(() => console.log("Insertado"));
+
+
+}
 
 async function main(){
     await app.listen(7000);

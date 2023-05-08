@@ -46,7 +46,7 @@ body {
     font-size: 20px;
 }
 
-#login-form {
+#login-form,#informacion{
     position: fixed;
     top: 50%;
     left: 50%;

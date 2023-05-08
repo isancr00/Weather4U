@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <script src="script.js"></script>
+        <title>Registro</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </head>
+
+    <body>
+        <header class="header">
+            <div>
+                <i class="material-icons" onclick="volverAInicio()">arrow_back_ios</i>
+                <span>Volver al inicio</span>
+            </div>
+
+            <div>
+                <span>Weather4U</span>
+            </div>
+        </header>
+
+        <main>
+            <h1>Registro de usuario</h1>
+
+            <p style="color: red;" id="alertas"></p>
+
+            <p>Nombre y apellidos</p>
+            <input type="text" id="nombreCompleto">
+
+            <p>Email</p>
+            <input type="text" id="email">
+
+            <p>Contraseña (la longitud ha de ser mayor a 6)</p>
+            <input type="password" id="contra1">
+
+            <p>Confirme la contraseña</p>
+            <input type="password" id="contra2">
+
+            <button onclick="registro()">Registro</button>
+
+        </main>
+    </body>
+
+</html>
