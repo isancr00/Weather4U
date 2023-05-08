@@ -17,7 +17,7 @@ function iniciarSesion(){
     var email = document.getElementById("iniciosesion-email").value;
     var contraseña = document.getElementById("iniciosesion-contraseña").value;
 
-    var url = "http://localhost:8040/comprobarUsuario/"
+    var url = "http://localhost:8040/iniciarSesion/"
 
     const regex = /[^@]+@[^@]+[.]\w+/;
 
@@ -30,16 +30,16 @@ function iniciarSesion(){
             })
             .then(response => response.json())
             .then(data => {
-                console.log(JSON.stringify(data));
-                var stringData = JSON.stringify(data);
-                if(stringData == '[]'){
+                if(JSON.stringify(data) == '[]'){
                     document.getElementById("alerta").innerText = "Los datos introducidos no se encuentran en el sistema";
                     document.getElementById("iniciosesion-email").value = "";
                     document.getElementById("iniciosesion-contraseña").value = "";
                 }else{
                     cerrarFormularioInicioSesion();
                     document.getElementById("informacion").style.display = "none";
-                    console.log(stringData);
+                    document.getElementById("inicio-usuario").innerText = data[0].nombreCompleto;
+                    document.getElementById("boton-inicio").setAttribute("onclick","cerrarSesion()")
+                    mostrarCiudades(data[0].ciudades);
                 }
             });
 
@@ -67,36 +67,58 @@ function volverAInicio(){
     location.href = "/index.html"
 }
 
+function mostrarCiudades(ciudades){
+    console.log("Las ciudades son: " + ciudades);
+}
+
 function registro(){
     var nombre = document.getElementById("nombreCompleto").value;
     var email = document.getElementById("email").value;
     var contra1 = document.getElementById("contra1").value;
     var contra2 = document.getElementById("contra2").value;
-    var url = "http://localhost:8040/registrarUsuario/";
-
-
+    var url1 = "http://localhost:8040/comprobarUsuario/";
+    var url2 = "http://localhost:8040/registrarUsuario/";
     const regex = /[^@]+@[^@]+[.]\w+/;
 
-
-    if(contra1 == contra2){
-
-        if(contra1.length > 6){
-            if(regex.test(email)){
-                fetch(url,{
-                    method: 'POST',
-                    body: JSON.stringify({ nombre:nombre ,email: email, contraseña:contra1 }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-    
-            }else{
-                document.getElementById("alertas").innerText = "El email está en el formato incorrecto"
-            }
+    fetch(url1,{
+        method: 'POST',
+        body: JSON.stringify({ email: email }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(JSON.stringify(data) != '[]'){
+            document.getElementById("alertas").innerText = "Este correo ya está registrado en el servicio. Pruebe a iniciar sesión"
         }else{
-            document.getElementById("alertas").innerText = "La contraseña ha de tener una longitud mayor a 6"
+            if(contra1 == contra2){
+
+                if(contra1.length > 6){
+                    if(regex.test(email)){
+                        fetch(url2,{
+                            method: 'POST',
+                            body: JSON.stringify({ nombre:nombre ,email: email, contraseña:contra1 }),
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        
+                        volverAInicio();
+
+                    }else{
+                        document.getElementById("alertas").innerText = "El email está en el formato incorrecto"
+                    }
+                }else{
+                    document.getElementById("alertas").innerText = "La contraseña ha de tener una longitud mayor a 6"
+                }
+        
+            }else{
+                document.getElementById("alertas").innerText = "Las contraseñas no coinciden"
+            }
         }
+    });
 
-    }else{
-        document.getElementById("alertas").innerText = "Las contraseñas no coinciden;"
-    }
+}
 
+
+function cerrarSesion(){
+    document.getElementById("login-form").innerHTML = "<p>Cerrar Sesión</p>";
+    mostrarFormularioInicioSesion();
 }

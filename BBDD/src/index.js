@@ -3,9 +3,14 @@ var express = require('express');
 var mongoose = require('mongoose');
 var adminRouter = express.Router();
 
+adminRouter.get('/iniciarSesion/:datos',function(req,res){
+    iniciarSesion(req.params.datos,res);
+})
+
 adminRouter.get('/comprobarUsuario/:datos',function(req,res){
     comprobarUsuario(req.params.datos,res);
 })
+
 
 adminRouter.get('/registrarUsuario/:datos',function(req,res){
     registrarUsuario(req.params.datos);
@@ -30,14 +35,21 @@ const usuarioEsquema = new mongoose.Schema({
 const Usuario = new mongoose.model('Usuario',usuarioEsquema);
 
 
-async function comprobarUsuario(datos,res){
+async function iniciarSesion(datos,res){
 
     var datosSplit = datos.split("_");
     var email = datosSplit[0];
     var contraseña = datosSplit[1];
 
     const result = await Usuario.find({email:email,contraseña:contraseña});
-    console.log(result);
+    res.send(JSON.stringify(result));
+}
+
+async function comprobarUsuario(datos,res){
+
+    var email = datos;
+
+    const result = await Usuario.find({email:email});
     res.send(JSON.stringify(result));
 }
 
@@ -48,10 +60,6 @@ async function registrarUsuario(datos){
     var email = datosSplit[1];
     var contraseña = datosSplit[2];
     var nombreCompleto = datosSplit[0];
-
-    console.log("Los datos han llegado:" + email +" " + contraseña +" " + nombreCompleto);
-    //LLEGAMOS
-    //HAY QUE INSERTAR USUARIO
 
     const insertar = new Usuario({email:email, contraseña:contraseña, nombreCompleto: nombreCompleto, ciudades:[]});
     insertar.save().then(() => console.log("Insertado"));

@@ -5,7 +5,11 @@ var adminRouter = express.Router();
 
 
 adminRouter.post('/comprobarUsuario',function(req,res){
-    comprobarUsuario(req.body.email,req.body.contraseña,res);
+    comprobarUsuario(req.body.email,res);
+});
+
+adminRouter.post('/iniciarSesion',function(req,res){
+    iniciarSesion(req.body.email,req.body.contraseña,res);
 });
 
 adminRouter.post('/registrarUsuario',function(req,res){
@@ -20,15 +24,21 @@ function registrarUsuario(nombre,email,contraseña,res){
     axios.get(url)
     .then(function(response){
         const data = response.data;
-        console.log(data);
         res.send(data);
     });
 }
 
 
-async function comprobarUsuario(email,contraseña,res){
+async function iniciarSesion(email,contraseña,res){
 
-    var url = "http://bbdd:7000/comprobarUsuario/" + email + "_" + contraseña;
+    var url = "http://bbdd:7000/iniciarSesion/" + email + "_" + contraseña;
+    //Aqui va la peticion
+    var resultado = await axios.get(url);
+    res.send(resultado.data);
+}
+
+async function comprobarUsuario(email,res){
+    var url = "http://bbdd:7000/comprobarUsuario/" + email;
     //Aqui va la peticion
     var resultado = await axios.get(url);
     res.send(resultado.data);
