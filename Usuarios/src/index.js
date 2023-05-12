@@ -30,7 +30,6 @@ function registrarUsuario(nombre,email,contraseña,res){
 
 
 async function iniciarSesion(email,contraseña,res){
-
     var url = "http://bbdd:7000/iniciarSesion/" + email + "_" + contraseña;
     //Aqui va la peticion
     var resultado = await axios.get(url);

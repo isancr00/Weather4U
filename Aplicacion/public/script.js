@@ -38,8 +38,10 @@ function iniciarSesion(){
                     cerrarFormularioInicioSesion();
                     document.getElementById("informacion").style.display = "none";
                     document.getElementById("inicio-usuario").innerText = data[0].nombreCompleto;
-                    document.getElementById("boton-inicio").setAttribute("onclick","cerrarSesion()")
-                    mostrarCiudades(data[0].ciudades);
+                    document.getElementById("boton-inicio").setAttribute("onclick","cerrarSesion()");
+                    localStorage.setItem("email",data[0].email);
+                    localStorage.setItem("nombre",data[0].nombreCompleto);
+
                 }
             });
 
@@ -117,8 +119,25 @@ function registro(){
 
 }
 
+function cargarPagina(){
+    var emailStorage = localStorage.getItem("email");
+    var nombreStorage = localStorage.getItem("nombre");
+
+    console.log(emailStorage);
+
+    if(emailStorage!=null){
+        document.getElementById("inicio-usuario").innerText = nombreStorage;
+        document.getElementById("informacion").style.display = "none";
+        document.getElementById("boton-inicio").setAttribute("onclick","cerrarSesion()");
+    }
+
+
+}
+
 
 function cerrarSesion(){
-    document.getElementById("login-form").innerHTML = "<p>Cerrar Sesión</p>";
-    mostrarFormularioInicioSesion();
+    localStorage.clear();
+    document.getElementById("inicio-usuario").innerText = "Iniciar sesión";
+    document.getElementById("boton-inicio").setAttribute("onclick","mostrarFormularioInicioSesion()");
+
 }
