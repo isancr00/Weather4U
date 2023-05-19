@@ -1,3 +1,28 @@
+function buscar(){
+    var ciudad = document.getElementById('ciudad-input').value;
+    var url = "http://localhost:8050/coordenadas";
+    fetch(url,{
+        method: 'POST',
+        body: JSON.stringify({ciudad:ciudad}),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data =>{
+        var lat = data.lat;
+        var long = data.lng;
+        document.getElementById('datosTiempo').innerText = ciudad + ": " + lat + " " + long;
+    });
+}
+
+function cambiarARegistro(){
+    location.href = "/registro.html"
+
+}
+
+function volverAInicio(){
+    location.href = "/index.html"
+}
+
 function mostrarFormularioInicioSesion(){
     document.getElementById("informacion").style.display = "none";
     var formularioSesion = document.getElementById("login-form");
@@ -9,9 +34,6 @@ function cerrarFormularioInicioSesion(){
     formularioSesion.style.display = "none";
 }
 
-function buscar(){
-    document.getElementById("informacion").style.display = "none";
-}
 
 function iniciarSesion(){
     var email = document.getElementById("iniciosesion-email").value;
@@ -59,15 +81,6 @@ function iniciarSesion(){
      }
     }
 
-
-function cambiarARegistro(){
-    location.href = "/registro.html"
-
-}
-
-function volverAInicio(){
-    location.href = "/index.html"
-}
 
 function mostrarCiudades(ciudades){
     console.log("Las ciudades son: " + ciudades);

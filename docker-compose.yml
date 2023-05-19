@@ -38,6 +38,12 @@ services:
       dockerfile: Dockerfile     
     ports:
       - "8040:6000"
+  ciudades:
+    build: 
+      context: Ciudades
+      dockerfile: Dockerfile     
+    ports:
+      - "8050:8000"
 
 volumes:
   mongodb_data_container:
