@@ -1,61 +1,40 @@
 <!DOCTYPE html>
-<html onc>
-    <head>
-        <link rel="stylesheet" href="styles.css">
-        <script src="script.js"></script>
-        <title>Weather4U</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    </head>
 
-    <body onload="cargarPagina()">   
-        <header class="header">
-            <div>
-                <span>Weather4U</span>
-            </div>
-            <div class="search-container">
-                <i class="material-icons">search</i>
-                <input type="text" placeholder="Buscar..." id="ciudad-input">
-                <button type="submit" onclick="buscar()">
-                    <i class="material-icons">search</i>
-                </button>
-            </div>
-            <div onclick="mostrarFormularioInicioSesion()" id="boton-inicio">
-                <i class="material-icons">account_circle</i>
-                <span id="inicio-usuario">Iniciar sesión</span>
-            </div>
-        </header>
-        <main>
-            <div id="login-form" style="display:none;">
-                <div onclick="cerrarFormularioInicioSesion()"><i class="material-icons">close</i></div>
-                <p>Inicio de sesión/Registro</p>
-                <p id="alerta" style="color: red;"></p>
-                <p>Email</p>
-                <input type="text" id="iniciosesion-email" placeholder="email">
-                <p>Contraseña</p>
-                <input type="password" id="iniciosesion-contraseña" placeholder="contraseña">
-                <p></p>
-                <button onclick="iniciarSesion()">Iniciar sesión</button>
-                <button onclick="cambiarARegistro()">Registrarse</button>
+<html>
 
-            </div>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <script src="script.js"></script>
+    <title>Weather4U</title>
+    <meta charset="utf-8">
+</head>
 
-            <div id="informacion">
-                <p>Bienvenido a Weather4u, tu aplicación del tiempo favorita.</p>
-                <p>Para comenzar, inicie sesión, o introduzca el nombre de una ciudad en el cuadro de búsqueda.</p>
-                <p>Estar registrado le permite almacenar sus ciudades preferidas, y obtener sus datos meteorológicos de una manera
-                    más accesible.
-                </p>
-            </div>
+<body>
+    <div id="barraDeNavegacion">
+        <nav class="navbar">
+            <ul class="elementos-izq">
+                <li><a href="index.html"><i class="fa fa-sun mr-2"></i>Weather4u</a></li>
+            </ul>
+            <ul class="elementos-der">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="info.html">Acerca de</a></li>
+                <li><a href="registro.html">Registro</a></li>
+                <li><a href="inicioSesion.html">Iniciar sesión</a></li>
+            </ul>
+        </nav>
+    </div>
 
-            <p id="datosTiempo"></p>
+    <div class="contenedor-busqueda">
+        <input type="text" class="caja-busqueda" placeholder="Introduzca el nombre de la ciudad...">
+        <p></p>
+        <button class="boton-busqueda">Buscar</button>
+    </div>
 
 
-        </main>
-    </body>
 
 
+</body>
 
 
 
