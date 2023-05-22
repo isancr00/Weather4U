@@ -10,24 +10,23 @@
     <meta charset="utf-8">
 </head>
 
-<body>
+<body onload="cargarPagina()">
     <div id="barraDeNavegacion">
         <nav class="navbar">
             <ul class="elementos-izq">
                 <li><a href="index.html"><i class="fa fa-sun mr-2"></i>Weather4u</a></li>
             </ul>
-            <ul class="elementos-der">
+            <ul class="elementos-der" id="elementos-der">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="info.html">Acerca de</a></li>
                 <li><a href="registro.html">Registro</a></li>
-                <li><a href="inicioSesion.html">Iniciar sesión</a></li>
             </ul>
         </nav>
     </div>
 
     <div class="contenedor-formulario">
-        <div class="formulario">
-            <form action="">
+        <div class="formulario-sesion">
+            <div>
                 <p id="alerta" style="color: red;"></p>
                 <h2>Email</h2>
                 <input type="email" required id="iniciosesion-email">
@@ -36,7 +35,7 @@
                 <input type="password" required id="iniciosesion-contraseña">
                 <p></p>
                 <button onclick="iniciarSesion()">Iniciar sesión</button>
-            </form>
+            </div>
         </div>
     </div>
 

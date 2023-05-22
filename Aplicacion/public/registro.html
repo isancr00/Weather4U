@@ -10,24 +10,41 @@
     <meta charset="utf-8">
 </head>
 
-<body>
+<body onload="cargarPagina()">
     <div id="barraDeNavegacion">
         <nav class="navbar">
             <ul class="elementos-izq">
                 <li><a href="index.html"><i class="fa fa-sun mr-2"></i>Weather4u</a></li>
             </ul>
-            <ul class="elementos-der">
+            <ul class="elementos-der" id="elementos-der">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="info.html">Acerca de</a></li>
-                <li><a href="registro.html">Registro</a></li>
                 <li><a href="inicioSesion.html">Iniciar sesión</a></li>
             </ul>
         </nav>
     </div>
 
     <div class="contenedor-formulario">
-        <div class="formulario">
-            <p>Aqui va el formulario jeje</p>
+        <div class="formulario-registro">
+            <div>
+                <p id="alerta" style="color: red;"></p>
+                <h2>Nombre completo</h2>
+                <input type="text" id="registro-nombre">
+                <p></p>
+
+                <h2>Email</h2>
+                <input type="email" id="registro-email">
+                <p></p>
+
+                <h2>Contraseña</h2>
+                <input type="password" id="registro-contraseña1">
+                <p></p>
+
+                <h2>Repita la contraseña</h2>
+                <input type="password" id="registro-contraseña2">
+                <p></p>
+                <button onclick="registro()">Completar registro</button>
+            </div>
         </div>
     </div>
 
