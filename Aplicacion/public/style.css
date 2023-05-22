@@ -63,6 +63,10 @@
   margin-left: auto;
 }
 
+.navbar .elementos-centro{
+  margin-left: auto;
+}
+
 .navbar ul li a {
   display: block;
   padding: 10px;
@@ -109,17 +113,6 @@ button {
   border-radius: 15px;
   cursor: pointer;
 }
-.navbar .menu-desplegable{
-  margin-left: 10px;
-}
-
-.navbar .dropdown + * {
-  margin-left: 10px;
-}
-.menu-desplegable {
-  position: relative;
-  display: inline-block;
-}
 
 .contenido-menu {
   display: none;
@@ -132,4 +125,24 @@ button {
 .menu-desplegable:hover .contenido-menu {
   display: block;
 }
+
+.principal {
+  display: flex;
+}
+
+.left-div {
+  width: 20%;
+  height: 100vh;
+}
+
+.right-div {
+  width: 80%;
+  height: 100vh;
+}
+
+.left-div{
+    display: flex;
+    flex-direction: column;
+}
+
 

@@ -104,21 +104,19 @@ function registro() {
 }
 
 function cargarPagina() {
-    var emailStorage = localStorage.getItem("email");
+    var emailStorage = localStorage.getItem("email");   
     var nombreStorage = localStorage.getItem("nombre");
 
     console.log(emailStorage);
 
     if (emailStorage != null) {
-        //Añadir el menú desplegable con el nombre del usuario y con la opción perfil y la opción cerrar sesión
         var elementosDer = document.getElementById("elementos-der");
         var html = '<li><a href="index.html">Inicio</a>' + 
-        '</li><li><a href="info.html">Acerca de</a></li>'+ 
-        '<div class="menu-desplegable"><span>' + nombreStorage +'</span>'+
-        '<div class="contenido-menu"><a href="perfil.html">'+
-        'Perfil</a><p></p><a href="index.html" onclick="'+
-        'cerrarSesion()">Cerrar Sesión</a></div></div>';
+        '</li><li><a href="info.html">Acerca de</a></li>' +
+        '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';           
         elementosDer.innerHTML = html;
+
+        document.getElementById("nombre-usuario").innerText = nombreStorage;
     }
 
 
