@@ -63,7 +63,7 @@
   margin-left: auto;
 }
 
-.navbar .elementos-centro{
+.navbar .elementos-centro {
   margin-left: auto;
 }
 
@@ -140,9 +140,19 @@ button {
   height: 100vh;
 }
 
-.left-div{
-    display: flex;
-    flex-direction: column;
+.left-div {
+  display: flex;
+  flex-direction: column;
 }
 
+label {
+  color: grey;
+}
 
+input[type="radio"] {
+  display: none;
+}
+
+label:hover {
+  color: orange;
+}

@@ -10,7 +10,16 @@ function buscar() {
         .then(data => {
             var lat = data.lat;
             var long = data.lng;
-            document.getElementById('datos-tiempo').innerText = ciudad + ": " + lat + " " + long;
+            var emailStorage = localStorage.getItem("email");
+            var datosTiempo = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long + '</h2>';
+            if (emailStorage != null) {
+                //Al lado de la ciudad hay que poner una estrella
+                var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1">★</label></div>';
+                datosTiempo += estrella;
+            } else {
+                datosTiempo += "</h2></div>";
+            }
+            document.getElementById("datos-tiempo").innerHTML = datosTiempo;
         });
 }
 
@@ -74,7 +83,7 @@ function registro() {
         .then(response => response.json())
         .then(data => {
             if (JSON.stringify(data) != '[]') {
-                document.getElementById("alertas").innerText = "Correo ya registrado"
+                document.getElementById("alerta").innerText = "Correo ya registrado"
             } else {
                 if (contra1 == contra2) {
 
@@ -104,26 +113,68 @@ function registro() {
 }
 
 function cargarPagina() {
-    var emailStorage = localStorage.getItem("email");   
+    var emailStorage = localStorage.getItem("email");
     var nombreStorage = localStorage.getItem("nombre");
 
     console.log(emailStorage);
 
     if (emailStorage != null) {
         var elementosDer = document.getElementById("elementos-der");
-        var html = '<li><a href="index.html">Inicio</a>' + 
-        '</li><li><a href="info.html">Acerca de</a></li>' +
-        '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';           
+        var html = '<li><a href="index.html">Inicio</a>' +
+            '</li><li><a href="info.html">Acerca de</a></li>' +
+            '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';
         elementosDer.innerHTML = html;
-
         document.getElementById("nombre-usuario").innerText = nombreStorage;
-    }
 
+        rellenarCiudades();
+    }
 
 }
 
 
 function cerrarSesion() {
     localStorage.clear();
+}
+
+function marcarComoFav() {
+    var url = "http://localhost:8050/ciudadFav";
+    var datosCiudad = document.getElementById("datos-ciudad").textContent;
+    var datosSplit = datosCiudad.split(" ");
+    var ciudad = "";
+    var longitud = "";
+    var latitud = "";
+
+    longitud = datosSplit[datosSplit.length - 1];
+    latitud = datosSplit[datosSplit.length - 2];
+
+    var longMax = datosSplit.length - 2;
+
+    for (i = 0; i<longMax ; i++) {
+        ciudad += datosSplit[i] + " ";
+    }
+
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, email: localStorage.getItem("email") }),
+        headers: { 'Content-Type': 'application/json' }
+    });
+}
+
+function rellenarCiudades() {
+    var url = "http://localhost:8050/ciudades";
+
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ email: localStorage.getItem("email") }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        });
+
+
+
 
 }
