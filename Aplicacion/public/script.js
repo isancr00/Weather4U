@@ -11,10 +11,10 @@ function buscar() {
             var lat = data.lat;
             var long = data.lng;
             var emailStorage = localStorage.getItem("email");
-            var datosTiempo = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long + '</h2>';
+            var datosTiempo = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
             if (emailStorage != null) {
                 //Al lado de la ciudad hay que poner una estrella
-                var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1">★</label></div>';
+                var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1"> ★</label></div></h2>';
                 datosTiempo += estrella;
             } else {
                 datosTiempo += "</h2></div>";
@@ -112,6 +112,7 @@ function registro() {
 
 }
 
+
 function cargarPagina() {
     var emailStorage = localStorage.getItem("email");
     var nombreStorage = localStorage.getItem("nombre");
@@ -125,7 +126,6 @@ function cargarPagina() {
             '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';
         elementosDer.innerHTML = html;
         document.getElementById("nombre-usuario").innerText = nombreStorage;
-
         rellenarCiudades();
     }
 
@@ -144,10 +144,10 @@ function marcarComoFav() {
     var longitud = "";
     var latitud = "";
 
-    longitud = datosSplit[datosSplit.length - 1];
-    latitud = datosSplit[datosSplit.length - 2];
+    longitud = datosSplit[datosSplit.length - 2];
+    latitud = datosSplit[datosSplit.length - 3];
 
-    var longMax = datosSplit.length - 2;
+    var longMax = datosSplit.length - 3;
 
     for (i = 0; i<longMax ; i++) {
         ciudad += datosSplit[i] + " ";
@@ -158,6 +158,8 @@ function marcarComoFav() {
         body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, email: localStorage.getItem("email") }),
         headers: { 'Content-Type': 'application/json' }
     });
+
+    rellenarCiudades();
 }
 
 function rellenarCiudades() {
@@ -173,8 +175,4 @@ function rellenarCiudades() {
         .then(data => {
             console.log(data);
         });
-
-
-
-
 }
