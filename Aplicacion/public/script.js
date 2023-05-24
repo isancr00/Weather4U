@@ -13,13 +13,14 @@ function buscar() {
             var emailStorage = localStorage.getItem("email");
             var datosTiempo = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
             if (emailStorage != null) {
-                //Al lado de la ciudad hay que poner una estrella
                 var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1"> ★</label></div></h2>';
                 datosTiempo += estrella;
             } else {
                 datosTiempo += "</h2></div>";
             }
             document.getElementById("datos-tiempo").innerHTML = datosTiempo;
+
+            datosTiempo(lat,long)
         });
 }
 
@@ -164,7 +165,7 @@ function marcarComoFav() {
 
 function rellenarCiudades() {
     var url = "http://localhost:8050/ciudades";
-
+    var listaCiudades = document.getElementById("ciudades");
     fetch(url, {
         method: 'POST',
         body: JSON.stringify({ email: localStorage.getItem("email") }),
@@ -174,5 +175,37 @@ function rellenarCiudades() {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+
+            var separador = "<hr>";
+            for(i=0;i<data.length;i++){
+                var nombreCiudad = data[i].nombreCiudad;
+                var lat = data[i].latitud;
+                var long = data[i].longitud;  
+                //MIRAR ESTO 
+                var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')">' + nombreCiudad +  
+                '</a>  <i class="fa fa-trash" onclick="eliminarCiudad('+ nombreCiudad+ ',' + localStorage.getItem("email") +'c)"></i>';
+
+                listaCiudades.innerHTML += separador;
+                listaCiudades.innerHTML += texto;
+            }
+
         });
+}
+
+function datosTiempo(lat,long){
+    console.log(lat);
+
+}
+
+function eliminarCiudad(nombreCiudad,email){
+    //Eliminamos ciudad
+    var url = "http://localhost:8050/eliminarCiudad";
+
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ ciudad: nombreCiudad, email:email }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+
+    rellenarCiudades();
 }

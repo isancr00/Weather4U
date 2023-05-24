@@ -24,6 +24,10 @@ adminRouter.get('/ciudades/:datos', function (req, res) {
     getCiudades(req.params.datos,res);
 })
 
+adminRouter.get('/eliminarCiudad/:datos', function (req, res) {
+    eliminarCiudad(req.params.datos);
+})
+
 app.use(adminRouter);
 
 
@@ -101,6 +105,16 @@ async function añadirCiudad(datos) {
         result[0].save();
     
     }
+}
+
+async function eliminarCiudad(datos){
+    var datosSplit = datos.split("_");
+    var email = datosSplit[0];
+    var ciudad = datosSplit[1];
+
+    const result = await Usuario.find({ email: email });
+    result[0].ciudades.pull({nombreCiudad:ciudad});
+    result[0].save;
 }
 
 async function getCiudades(email,res){
