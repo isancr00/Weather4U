@@ -108,7 +108,6 @@ async function añadirCiudad(datos) {
 }
 
 async function eliminarCiudad(datos) {
-    //Mirar esto
     var datosSplit = datos.split("_");
     var email = datosSplit[0];
     var ciudad = datosSplit[1] + ' ';
