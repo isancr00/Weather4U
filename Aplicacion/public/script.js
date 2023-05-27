@@ -164,6 +164,7 @@ function marcarComoFav() {
 }
 
 function rellenarCiudades() {
+    //AQUI HAY QUE COMPROBAR QUE LA CIUDAD NO ESTÁ ENTRE LAS YA EXISTENTES
     var url = "http://localhost:8050/ciudades";
     var listaCiudades = document.getElementById("ciudades");
     fetch(url, {
@@ -179,11 +180,13 @@ function rellenarCiudades() {
             var separador = "<hr>";
             for(i=0;i<data.length;i++){
                 var nombreCiudad = data[i].nombreCiudad;
+                var ciudad = "'" + data[i].nombreCiudad + "'";
+
+                var email = "'" + localStorage.getItem("email") + "'";
                 var lat = data[i].latitud;
                 var long = data[i].longitud;  
-                //MIRAR ESTO 
-                var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')">' + nombreCiudad +  
-                '</a>  <i class="fa fa-trash" onclick="eliminarCiudad('+ nombreCiudad+ ',' + localStorage.getItem("email") +'c)"></i>';
+                var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')">' + nombreCiudad + '</a>';
+                texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email +')"><label for="radio1"> 🗑</label>'
 
                 listaCiudades.innerHTML += separador;
                 listaCiudades.innerHTML += texto;
@@ -206,6 +209,4 @@ function eliminarCiudad(nombreCiudad,email){
         body: JSON.stringify({ ciudad: nombreCiudad, email:email }),
         headers: { 'Content-Type': 'application/json' }
     })
-
-    rellenarCiudades();
 }

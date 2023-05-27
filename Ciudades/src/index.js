@@ -51,6 +51,7 @@ function ciudadFavorita(ciudad, longitud, latitud, email) {
 
 function eliminarCiudad(email, ciudad) {
     var url = "http://bbdd:7000/eliminarCiudad/" + email + "_" + ciudad;
+    console.log(url);
     axios.get(url);
 }
 

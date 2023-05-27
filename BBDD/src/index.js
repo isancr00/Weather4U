@@ -21,7 +21,7 @@ adminRouter.get('/addCiudad/:datos', function (req, res) {
 })
 
 adminRouter.get('/ciudades/:datos', function (req, res) {
-    getCiudades(req.params.datos,res);
+    getCiudades(req.params.datos, res);
 })
 
 adminRouter.get('/eliminarCiudad/:datos', function (req, res) {
@@ -92,35 +92,42 @@ async function añadirCiudad(datos) {
     const result = await Usuario.find({ email: email });
     var ciudades = result[0].ciudades;
 
-    for(i=0;i<ciudades.length;i++){
+    for (i = 0; i < ciudades.length; i++) {
         console.log(ciudades[i].nombreCiudad);
-        if(ciudades[i].nombreCiudad == ciudad){
+        if (ciudades[i].nombreCiudad == ciudad) {
             existe = true;
         }
     }
 
-    if(existe==false){
+    if (existe == false) {
         console.log("No existe")
         result[0].ciudades.push({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud });
         result[0].save();
-    
+
     }
 }
 
-async function eliminarCiudad(datos){
+async function eliminarCiudad(datos) {
+    //Mirar esto
     var datosSplit = datos.split("_");
     var email = datosSplit[0];
-    var ciudad = datosSplit[1];
-
+    var ciudad = datosSplit[1] + ' ';
     const result = await Usuario.find({ email: email });
-    result[0].ciudades.pull({nombreCiudad:ciudad});
-    result[0].save;
+
+    for (i = 0; i < result[0].ciudades.length; i++) {
+        var nombreAux = result[0].ciudades[i].nombreCiudad;
+
+        if(nombreAux == ciudad){
+           result[0].ciudades.splice(i,1);
+           result[0].save();
+        }
+    }
 }
 
-async function getCiudades(email,res){
+async function getCiudades(email, res) {
     const result = await Usuario.find({ email: email });
 
-    if(result != []){
+    if (result != []) {
         res.send(JSON.stringify(result[0].ciudades));
     }
 }
