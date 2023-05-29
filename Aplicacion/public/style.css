@@ -153,7 +153,11 @@ input[type="radio"] {
   display: none;
 }
 
-label:hover {
+.estrella:hover {
+  color: orange;
+}
+
+.estrella-marcada {
   color: orange;
 }
 
@@ -164,6 +168,11 @@ ul{
 .ciudades {
   display: flex;
   flex-direction: column;
+}
+
+.elemento-ciudad:hover{
+  color: orangered;
+  cursor: pointer;
 }
 
 .ciudades a {

@@ -13,13 +13,15 @@ function buscar() {
             var emailStorage = localStorage.getItem("email");
             var datosTiempo = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
             if (emailStorage != null) {
-                var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1"> ★</label></div></h2>';
+                var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1" class = "estrella"> ★</label></div></h2>';
                 datosTiempo += estrella;
             } else {
                 datosTiempo += "</h2></div>";
             }
             document.getElementById("datos-tiempo").innerHTML = datosTiempo;
+            datosTiempo(lat,long);
         });
+
 }
 
 function iniciarSesion() {
@@ -183,7 +185,7 @@ function rellenarCiudades() {
                 var email = "'" + localStorage.getItem("email") + "'";
                 var lat = data[i].latitud;
                 var long = data[i].longitud;
-                var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')">' + nombreCiudad + '</a>';
+                var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
                 texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="radio1"> 🗑</label>'
 
                 listaCiudades.innerHTML += separador;
@@ -194,63 +196,71 @@ function rellenarCiudades() {
 }
 
 function datosTiempo(lat, long) {
-    //Vamos a obtener los datos del tiempo
-    var tiempoGeneral1Semana = tiempoGeneral1Semana(lat, long);
-    var temperatura1Dia = temperatura1Dia(lat, long);
-    var precipitaciones1Dia = precipitaciones1Dia(lat,long);
-    var tiempoAhora = tiempoAhora(lat,long);
-    //Temperatura máxima y minima
+    var datosTiempoGeneral1Semana = tiempoGeneral1Semana(lat, long);
+    var datosTemperatura1Dia = temperatura1Dia(lat, long);
+    var datosPrecipitaciones1Dia = precipitaciones1Dia(lat, long);
+    var datosTiempoAhora = tiempoAhora(lat, long);
+
+
 }
 
-function tiempoAhora(lat,long){
+function tiempoAhora(lat, long) {
     var url = "http://localhost:8030/tiempoAhora/" + lat + "_" + long;
-
+    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
             console.log(data)
+            devuelve = data;
         });
+    return devuelve;
 }
 
-function tiempoGeneral1Semana(lat,long){
+function tiempoGeneral1Semana(lat, long) {
     var url = "http://localhost:8030/tiempo/" + lat + "_" + long;
 
+    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            return data;
+            devuelve = data;
         });
+    return devuelve;
 }
 
 function temperatura1Dia(lat, long) {
     var url = "http://localhost:8030/temperatura/" + lat + "_" + long;
 
+    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            return data;
+            devuelve = data;
         });
+    return devuelve;
 }
 
-function precipitaciones1Dia(lat,long){
+function precipitaciones1Dia(lat, long) {
     var url = "http://localhost:8030/precipitaciones/" + lat + "_" + long;
 
+    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            return data;
+            devuelve = data;
         });
+    return devuelve;
 }
 
 
