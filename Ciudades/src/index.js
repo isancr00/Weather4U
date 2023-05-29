@@ -43,7 +43,7 @@ function getCoordenadas(ciudad, res) {
         });
 }
 
-function ciudadFavorita(ciudad, longitud, latitud, email) {
+function ciudadFavorita(ciudad, latitud, longitud, email) {
     var url = "http://bbdd:7000/addCiudad/" + ciudad + "_" + latitud + "_" + longitud + "_" + email;
     console.log(url);
     axios.get(url);

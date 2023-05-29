@@ -84,7 +84,7 @@ async function añadirCiudad(datos) {
     var datosSplit = datos.split('_');
     var ciudad = datosSplit[0];
     var longitud = datosSplit[2];
-    var latitud = datosSplit[1]
+    var latitud = datosSplit[1];
     var email = datosSplit[3];
     var existe = false;
     console.log(ciudad);

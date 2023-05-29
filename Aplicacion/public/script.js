@@ -19,8 +19,6 @@ function buscar() {
                 datosTiempo += "</h2></div>";
             }
             document.getElementById("datos-tiempo").innerHTML = datosTiempo;
-
-            datosTiempo(lat,long)
         });
 }
 
@@ -150,7 +148,7 @@ function marcarComoFav() {
 
     var longMax = datosSplit.length - 3;
 
-    for (i = 0; i<longMax ; i++) {
+    for (i = 0; i < longMax; i++) {
         ciudad += datosSplit[i] + " ";
     }
 
@@ -164,9 +162,9 @@ function marcarComoFav() {
 }
 
 function rellenarCiudades() {
-    //AQUI HAY QUE COMPROBAR QUE LA CIUDAD NO ESTÁ ENTRE LAS YA EXISTENTES
     var url = "http://localhost:8050/ciudades";
     var listaCiudades = document.getElementById("ciudades");
+    listaCiudades.innerHTML = "";
     fetch(url, {
         method: 'POST',
         body: JSON.stringify({ email: localStorage.getItem("email") }),
@@ -178,15 +176,15 @@ function rellenarCiudades() {
             console.log(data);
 
             var separador = "<hr>";
-            for(i=0;i<data.length;i++){
+            for (i = 0; i < data.length; i++) {
                 var nombreCiudad = data[i].nombreCiudad;
                 var ciudad = "'" + data[i].nombreCiudad + "'";
 
                 var email = "'" + localStorage.getItem("email") + "'";
                 var lat = data[i].latitud;
-                var long = data[i].longitud;  
+                var long = data[i].longitud;
                 var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')">' + nombreCiudad + '</a>';
-                texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email +')"><label for="radio1"> 🗑</label>'
+                texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="radio1"> 🗑</label>'
 
                 listaCiudades.innerHTML += separador;
                 listaCiudades.innerHTML += texto;
@@ -195,18 +193,75 @@ function rellenarCiudades() {
         });
 }
 
-function datosTiempo(lat,long){
-    console.log(lat);
-
+function datosTiempo(lat, long) {
+    //Vamos a obtener los datos del tiempo
+    var tiempoGeneral1Semana = tiempoGeneral1Semana(lat, long);
+    var temperatura1Dia = temperatura1Dia(lat, long);
+    var precipitaciones1Dia = precipitaciones1Dia(lat,long);
+    var tiempoAhora = tiempoAhora(lat,long);
+    //Temperatura máxima y minima
 }
 
-function eliminarCiudad(nombreCiudad,email){
-    //Eliminamos ciudad
+function tiempoAhora(lat,long){
+    var url = "http://localhost:8030/tiempoAhora/" + lat + "_" + long;
+
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+        });
+}
+
+function tiempoGeneral1Semana(lat,long){
+    var url = "http://localhost:8030/tiempo/" + lat + "_" + long;
+
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            return data;
+        });
+}
+
+function temperatura1Dia(lat, long) {
+    var url = "http://localhost:8030/temperatura/" + lat + "_" + long;
+
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            return data;
+        });
+}
+
+function precipitaciones1Dia(lat,long){
+    var url = "http://localhost:8030/precipitaciones/" + lat + "_" + long;
+
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            return data;
+        });
+}
+
+
+function eliminarCiudad(nombreCiudad, email) {
     var url = "http://localhost:8050/eliminarCiudad";
 
     fetch(url, {
         method: 'POST',
-        body: JSON.stringify({ ciudad: nombreCiudad, email:email }),
+        body: JSON.stringify({ ciudad: nombreCiudad, email: email }),
         headers: { 'Content-Type': 'application/json' }
     })
+
+    rellenarCiudades();
 }
