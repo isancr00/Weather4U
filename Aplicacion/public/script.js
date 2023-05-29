@@ -11,15 +11,15 @@ function buscar() {
             var lat = data.lat;
             var long = data.lng;
             var emailStorage = localStorage.getItem("email");
-            var datosTiempo = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
+            var datosTiempoTexto = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
             if (emailStorage != null) {
                 var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1" class = "estrella"> ★</label></div></h2>';
-                datosTiempo += estrella;
+                datosTiempoTexto += estrella;
             } else {
-                datosTiempo += "</h2></div>";
+                datosTiempoTexto += "</h2></div>";
             }
-            document.getElementById("datos-tiempo").innerHTML = datosTiempo;
-            datosTiempo(lat,long);
+            document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
+            datosTiempo(lat, long);
         });
 
 }
@@ -99,10 +99,10 @@ function registro() {
                             location.href = "/index.html"
 
                         } else {
-                            document.getElementById("alertas").innerText = "El email está en el formato incorrecto"
+                            document.getElementById("alerta").innerText = "El email está en el formato incorrecto"
                         }
                     } else {
-                        document.getElementById("alertas").innerText = "La contraseña ha de tener una longitud mayor a 6"
+                        document.getElementById("alerta").innerText = "La contraseña ha de tener una longitud mayor a 6"
                     }
 
                 } else {
@@ -201,7 +201,30 @@ function datosTiempo(lat, long) {
     var datosPrecipitaciones1Dia = precipitaciones1Dia(lat, long);
     var datosTiempoAhora = tiempoAhora(lat, long);
 
+}
 
+function generarGrafico(titulo, datos){
+    var datosTiempoText = document.getElementById("datos-tiempo");
+    datosTiempoText.innerHTML += '<canvas id="myChart"></canvas>'
+
+    var ctx = document.getElementById("myChart").getContext('2d');
+    const horas = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+        '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'
+        , '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+    var data = {
+        labels: horas,
+        datasets: [{
+            label: titulo,
+            data: datos,
+            borderWidth: 1,
+            borderColor: 'rgb(75, 192, 192)',
+        }]
+    }
+    
+    const myChart = new Chart(ctx,{
+        type: 'line',
+        data: data
+    })
 }
 
 function tiempoAhora(lat, long) {
@@ -213,54 +236,44 @@ function tiempoAhora(lat, long) {
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            devuelve = data;
         });
-    return devuelve;
 }
 
 function tiempoGeneral1Semana(lat, long) {
     var url = "http://localhost:8030/tiempo/" + lat + "_" + long;
 
-    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            devuelve = data;
+            console.log(data);
         });
-    return devuelve;
 }
 
 function temperatura1Dia(lat, long) {
     var url = "http://localhost:8030/temperatura/" + lat + "_" + long;
 
-    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            devuelve = data;
+            console.log(data);
+            generarGrafico('Evolución de la temperatura', data);
         });
-    return devuelve;
 }
 
 function precipitaciones1Dia(lat, long) {
     var url = "http://localhost:8030/precipitaciones/" + lat + "_" + long;
 
-    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            devuelve = data;
         });
-    return devuelve;
 }
 
 
