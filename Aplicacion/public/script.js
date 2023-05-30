@@ -184,7 +184,7 @@ function rellenarCiudades() {
                 var lat = data[i].latitud;
                 var long = data[i].longitud;
                 var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-                texto += '<input id="'+ nombreCiudad+ '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="' +  nombreCiudad +'">  🗑</label>'
+                texto += '<input id="' + nombreCiudad + '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="' + nombreCiudad + '">  🗑</label>'
 
                 listaCiudades.innerHTML += separador;
                 listaCiudades.innerHTML += texto;
@@ -205,7 +205,6 @@ function datosTiempo(nombre, lat, long, estrella) {
     var actual = "<div id='actual' class='actual'></div>"
     document.getElementById("datos-tiempo").innerHTML += actual;
 
-
     var tempAct = "<div class='temp-act'><h1 id='temp-actual'></h1></div>"
     document.getElementById("actual").innerHTML += tempAct;
 
@@ -221,12 +220,134 @@ function datosTiempo(nombre, lat, long, estrella) {
     var graficoPrecDia = "<div id ='prec-dia' class='prec-dia'><canvas id = 'precDiaChart'></canvas></div>"
     document.getElementById("dia").innerHTML += graficoPrecDia;
 
+    var semana = "<div id='semana' class = 'dia'></div>";
+    document.getElementById("datos-tiempo").innerHTML += semana;
+
+    var graficoTempSemana = "<div id ='temp-semana' class='temp-dia'><canvas id = 'tempSemanaChart'></canvas></div>"
+    document.getElementById("semana").innerHTML += graficoTempSemana;
+
+    var graficoPrecSemana = "<div id ='prec-semana' class='prec-dia'><canvas id = 'precSemanaChart'></canvas></div>"
+    document.getElementById("semana").innerHTML += graficoPrecSemana;
+
+    //Tabla evolucion semana
+
+    var tabla = "<div id = 'tabla'></div>";
+    document.getElementById("datos-tiempo").innerHTML += tabla;
+
+    
+
+
     tiempoGeneral1Semana(lat, long);
+    temperatura1Semana(lat, long);
+    precipitaciones1Semana(lat, long);
     temperatura1Dia(lat, long);
     precipitaciones1Dia(lat, long);
     tiempoAhora(lat, long);
 
 }
+
+function temperatura1Semana(lat,long){
+    var url = "http://localhost:8030/temperaturaSemana/" + lat + "_" + long;
+
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('tempSemanaChart').getContext('2d');
+            const dias = data.dias;
+
+            var opciones = {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Días'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'ºC'
+                        }
+                    }
+                }
+            };
+            var datos = {
+                labels: dias,
+                datasets: [{
+                    label: "Temperaturas máximas 1 semana",
+                    data: data.max,
+                    borderWidth: 1,
+                    borderColor: 'rgb(75, 192, 192)',
+                },
+                {
+                    label: "Temperaturas mínimas 1 semana",
+                    data: data.min,
+                    borderWidth: 1,
+                    borderColor: 'rgb(237, 122, 202)',
+                }]
+            }
+
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: datos,
+                options: opciones
+            })
+
+        });
+}
+
+function precipitaciones1Semana(lat,long){
+    var url = "http://localhost:8030/precipitacionesSemana/" + lat + "_" + long;
+
+    fetch(url, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+
+            var ctx = document.getElementById('precSemanaChart').getContext('2d');
+            const dias = data.dias;
+
+            var opciones = {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Días'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '%'
+                        }
+                    }
+                }
+            };
+            var datos = {
+                labels: dias,
+                datasets: [{
+                    label: "Evolución precipitaciones 24 horas",
+                    data: data.datos,
+                    borderWidth: 1,
+                    borderColor: 'rgb(75, 192, 192)',
+                }]
+            }
+
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: datos,
+                options: opciones
+            })
+        });
+}
+
 
 function transformarTiempo(tiempoGeneral) {
     switch (tiempoGeneral) {
@@ -299,7 +420,7 @@ function tiempoGeneral1Semana(lat, long) {
 }
 
 function temperatura1Dia(lat, long) {
-    var url = "http://localhost:8030/temperatura/" + lat + "_" + long;
+    var url = "http://localhost:8030/temperaturaDia/" + lat + "_" + long;
 
     fetch(url, {
         method: 'GET'
@@ -329,7 +450,7 @@ function temperatura1Dia(lat, long) {
                     }
                 }
             };
-            var data = {
+            var datos = {
                 labels: horas,
                 datasets: [{
                     label: "Evolución temperatura 24 horas",
@@ -341,7 +462,7 @@ function temperatura1Dia(lat, long) {
 
             const myChart = new Chart(ctx, {
                 type: 'line',
-                data: data,
+                data: datos,
                 options: opciones
             })
 
@@ -349,7 +470,7 @@ function temperatura1Dia(lat, long) {
 }
 
 function precipitaciones1Dia(lat, long) {
-    var url = "http://localhost:8030/precipitaciones/" + lat + "_" + long;
+    var url = "http://localhost:8030/precipitacionesDia/" + lat + "_" + long;
 
     fetch(url, {
         method: 'GET'
@@ -380,7 +501,7 @@ function precipitaciones1Dia(lat, long) {
                     }
                 }
             };
-            var data = {
+            var datos = {
                 labels: horas,
                 datasets: [{
                     label: "Evolución precipitaciones 24 horas",
@@ -392,7 +513,7 @@ function precipitaciones1Dia(lat, long) {
 
             const myChart = new Chart(ctx, {
                 type: 'line',
-                data: data,
+                data: datos,
                 options: opciones
             })
         });

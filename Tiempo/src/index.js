@@ -3,16 +3,20 @@ var express = require('express');
 const https = require('https');
 var adminRouter = express.Router();
 
-adminRouter.get('/amanecerAtardecer/:coordenadas', function (req, res) {
-  amanecerAtardecer(req.params.coordenadas, res);
-});
-
-adminRouter.get('/temperatura/:coordenadas', function (req, res) {
+adminRouter.get('/temperaturaDia/:coordenadas', function (req, res) {
   temperatura1Dia(req.params.coordenadas, res);
 });
 
-adminRouter.get('/precipitaciones/:coordenadas', function (req, res) {
+adminRouter.get('/precipitacionesDia/:coordenadas', function (req, res) {
   precipitaciones1Dia(req.params.coordenadas, res);
+});
+
+adminRouter.get('/temperaturaSemana/:coordenadas', function (req, res) {
+  temperatura1Semana(req.params.coordenadas, res);
+});
+
+adminRouter.get('/precipitacionesSemana/:coordenadas', function (req, res) {
+  precipitaciones1Semana(req.params.coordenadas, res);
 });
 
 adminRouter.get('/tiempoAhora/:coordenadas', function (req, res) {
@@ -57,7 +61,7 @@ async function tiempoGeneral1Semana(coordenadas, res) {
       console.error(error);
     } else {
       var resultado_json = JSON.parse(data);
-      var resultado = resultado_json.daily.weathercode;
+      var resultado = {datos: resultado_json.daily.weathercode, dias: resultado_json.daily.time};
       res.send(resultado);
     }
   });
@@ -95,6 +99,42 @@ async function precipitaciones1Dia(coordenadas, res) {
     } else {
       var resultado_json = JSON.parse(data);
       var resultado = resultado_json.hourly.precipitation_probability;
+      res.send(resultado);
+    }
+  });
+
+}
+
+async function temperatura1Semana(coordenadas, res) {
+  var coordenadasSplit = coordenadas.split('_');
+  var latitud = coordenadasSplit[0];
+  var longitud = coordenadasSplit[1];
+  const url = " https://api.open-meteo.com/v1/forecast?latitude=" + latitud + '&longitude=' + longitud + "&daily=temperature_2m_max,temperature_2m_min&timezone=auto";
+  console.log(url);
+
+  peticionGet(url, (error, data) => {
+    if (error) {
+      console.error(error);
+    } else {
+      var resultado_json = JSON.parse(data);
+      var resultado = {dias: resultado_json.daily.time,max: resultado_json.daily.temperature_2m_max, min:resultado_json.daily.temperature_2m_min };
+      res.send(resultado);
+    }
+  });
+}
+
+async function precipitaciones1Semana(coordenadas, res) {
+  var coordenadasSplit = coordenadas.split('_');
+  var latitud = coordenadasSplit[0];
+  var longitud = coordenadasSplit[1];
+  const url = " https://api.open-meteo.com/v1/forecast?latitude=" + latitud + '&longitude=' + longitud + "&daily=precipitation_probability_max&timezone=auto";
+
+  peticionGet(url, (error, data) => {
+    if (error) {
+      console.error(error);
+    } else {
+      var resultado_json = JSON.parse(data);
+      var resultado = {datos: resultado_json.daily.precipitation_probability_max, dias: resultado_json.daily.time};
       res.send(resultado);
     }
   });
