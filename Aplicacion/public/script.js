@@ -13,7 +13,7 @@ function buscar() {
             var emailStorage = localStorage.getItem("email");
             var datosTiempoTexto = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
             if (emailStorage != null) {
-                var estrella = '<input id="radio1" type="radio" name="estrellas" value="5" onclick="marcarComoFav()"><label for="radio1" class = "estrella"> ★</label></div></h2>';
+                var estrella = '<input id="radio1" type="radio" name="estrellas"  onclick="marcarComoFav()"><label for="radio1" class = "estrella"> ★</label></div></h2>';
                 datosTiempoTexto += estrella;
             } else {
                 datosTiempoTexto += "</h2></div>";
@@ -158,9 +158,7 @@ function marcarComoFav() {
         method: 'POST',
         body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, email: localStorage.getItem("email") }),
         headers: { 'Content-Type': 'application/json' }
-    });
-    
-    rellenarCiudades();
+    })
 }
 
 function rellenarCiudades() {
@@ -186,7 +184,7 @@ function rellenarCiudades() {
                 var lat = data[i].latitud;
                 var long = data[i].longitud;
                 var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-                texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="radio1"> 🗑</label>'
+                texto += '<input id="'+ nombreCiudad+ '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="' +  nombreCiudad +'">  🗑</label>'
 
                 listaCiudades.innerHTML += separador;
                 listaCiudades.innerHTML += texto;
@@ -275,31 +273,6 @@ function transformarTiempo(tiempoGeneral) {
             return "Tormenta con granizo";
     }
 }
-/*
-function generarGrafico(titulo, datos){
-    var datosTiempoText = document.getElementById("datos-tiempo");
-    datosTiempoText.innerHTML += '<canvas id="myChart"></canvas>'
-
-    var ctx = document.getElementById("myChart").getContext('2d');
-    const horas = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
-        '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'
-        , '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
-    var data = {
-        labels: horas,
-        datasets: [{
-            label: titulo,
-            data: datos,
-            borderWidth: 1,
-            borderColor: 'rgb(75, 192, 192)',
-        }]
-    }
-    
-    const myChart = new Chart(ctx,{
-        type: 'line',
-        data: data
-    })
-}
-*/
 function tiempoAhora(lat, long) {
     var url = "http://localhost:8030/tiempoAhora/" + lat + "_" + long;
     fetch(url, {
@@ -307,7 +280,6 @@ function tiempoAhora(lat, long) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             document.getElementById("temp-actual").innerText = data.temperature + "ºC";
             document.getElementById("tiemp-general").innerText = transformarTiempo(data.weathercode);
 
@@ -323,7 +295,6 @@ function tiempoGeneral1Semana(lat, long) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
         });
 }
 
@@ -335,7 +306,6 @@ function temperatura1Dia(lat, long) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             var ctx = document.getElementById('tempDiaChart').getContext('2d');
             const horas = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
                 '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'
@@ -386,7 +356,6 @@ function precipitaciones1Dia(lat, long) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
 
             var ctx = document.getElementById('precDiaChart').getContext('2d');
             const horas = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
@@ -438,6 +407,6 @@ function eliminarCiudad(nombreCiudad, email) {
         body: JSON.stringify({ ciudad: nombreCiudad, email: email }),
         headers: { 'Content-Type': 'application/json' }
     })
-
     rellenarCiudades();
+
 }
