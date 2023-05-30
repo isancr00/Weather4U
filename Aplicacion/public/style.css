@@ -152,6 +152,18 @@ button {
   width: 50%;
 }
 
+.dia{
+  display: flex;
+}
+
+.temp-dia{
+  width: 50%;
+}
+
+.prec-dia{
+  width: 50%;
+}
+
 .left-div {
   display: flex;
   flex-direction: column;

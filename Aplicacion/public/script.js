@@ -19,7 +19,7 @@ function buscar() {
                 datosTiempoTexto += "</h2></div>";
             }
             document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
-            datosTiempo(null, lat, long);
+            datosTiempo(ciudad, lat, long, null);
         });
 
 }
@@ -159,7 +159,7 @@ function marcarComoFav() {
         body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, email: localStorage.getItem("email") }),
         headers: { 'Content-Type': 'application/json' }
     });
-
+    
     rellenarCiudades();
 }
 
@@ -185,7 +185,7 @@ function rellenarCiudades() {
                 var email = "'" + localStorage.getItem("email") + "'";
                 var lat = data[i].latitud;
                 var long = data[i].longitud;
-                var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+                var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
                 texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="radio1"> 🗑</label>'
 
                 listaCiudades.innerHTML += separador;
@@ -195,8 +195,8 @@ function rellenarCiudades() {
         });
 }
 
-function datosTiempo(nombre, lat, long) {
-    if (nombre != null) {
+function datosTiempo(nombre, lat, long, estrella) {
+    if (estrella != null) {
         var datosTiempoTexto = '<div><h2 id="datos-ciudad">' + nombre + " " + lat + " " + long + '</h2></div>';
         document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
     }
@@ -207,18 +207,73 @@ function datosTiempo(nombre, lat, long) {
     var actual = "<div id='actual' class='actual'></div>"
     document.getElementById("datos-tiempo").innerHTML += actual;
 
-    
+
     var tempAct = "<div class='temp-act'><h1 id='temp-actual'></h1></div>"
     document.getElementById("actual").innerHTML += tempAct;
 
     var tiempoGeneral = "<div class='general-act'><h1 id='tiemp-general'></h1></div>"
     document.getElementById("actual").innerHTML += tiempoGeneral;
 
+    var dia = "<div id='dia' class = 'dia'></div>";
+    document.getElementById("datos-tiempo").innerHTML += dia;
+
+    var graficoTempDia = "<div id ='temp-dia' class='temp-dia'><canvas id = 'tempDiaChart'></canvas></div>"
+    document.getElementById("dia").innerHTML += graficoTempDia;
+
+    var graficoPrecDia = "<div id ='prec-dia' class='prec-dia'><canvas id = 'precDiaChart'></canvas></div>"
+    document.getElementById("dia").innerHTML += graficoPrecDia;
+
     tiempoGeneral1Semana(lat, long);
     temperatura1Dia(lat, long);
     precipitaciones1Dia(lat, long);
     tiempoAhora(lat, long);
 
+}
+
+function transformarTiempo(tiempoGeneral) {
+    switch (tiempoGeneral) {
+        case 0:
+            return "Cielo despejado";
+        case 1:
+            return "Mayormente despejado";
+        case 2:
+            return "Parcialmente nublado";
+        case 3:
+            return "Nublado";
+        case 45:
+        case 48:
+            return "Niebla";
+        case 51:
+        case 53:
+        case 55:
+        case 56:
+        case 57:
+            return "Llovizna";
+        case 61:
+        case 63:
+        case 65:
+            return "Lluvia";
+        case 66:
+        case 67:
+            return "Granizo";
+        case 71:
+        case 73:
+        case 75:
+        case 77:
+            return "Nieve";
+        case 80:
+        case 81:
+        case 82:
+            return "Fuertes rachas de lluvias";
+        case 85:
+        case 86:
+            return "Fuertes rachas de nieve";
+        case 95:
+            return "Tormenta";
+        case 96:
+        case 99:
+            return "Tormenta con granizo";
+    }
 }
 /*
 function generarGrafico(titulo, datos){
@@ -253,8 +308,8 @@ function tiempoAhora(lat, long) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            document.getElementById("temp-actual").innerText = "Temperatura : " + data.temperature + "ºC";
-            document.getElementById("tiemp-general").innerText = "Tiempo general : " + data.weathercode;
+            document.getElementById("temp-actual").innerText = data.temperature + "ºC";
+            document.getElementById("tiemp-general").innerText = transformarTiempo(data.weathercode);
 
         });
 
@@ -281,6 +336,45 @@ function temperatura1Dia(lat, long) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            var ctx = document.getElementById('tempDiaChart').getContext('2d');
+            const horas = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+                '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'
+                , '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+
+            var opciones = {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Horas'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'ºC'
+                        }
+                    }
+                }
+            };
+            var data = {
+                labels: horas,
+                datasets: [{
+                    label: "Evolución temperatura 24 horas",
+                    data: data,
+                    borderWidth: 1,
+                    borderColor: 'rgb(75, 192, 192)',
+                }]
+            }
+
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: opciones
+            })
+
         });
 }
 
@@ -293,6 +387,45 @@ function precipitaciones1Dia(lat, long) {
         .then(response => response.json())
         .then(data => {
             console.log(data)
+
+            var ctx = document.getElementById('precDiaChart').getContext('2d');
+            const horas = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+                '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'
+                , '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+
+            var opciones = {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Horas'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '%'
+                        }
+                    }
+                }
+            };
+            var data = {
+                labels: horas,
+                datasets: [{
+                    label: "Evolución precipitaciones 24 horas",
+                    data: data,
+                    borderWidth: 1,
+                    borderColor: 'rgb(75, 192, 192)',
+                }]
+            }
+
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: opciones
+            })
         });
 }
 
