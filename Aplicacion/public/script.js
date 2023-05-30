@@ -19,7 +19,7 @@ function buscar() {
                 datosTiempoTexto += "</h2></div>";
             }
             document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
-            datosTiempo(lat, long);
+            datosTiempo(null, lat, long);
         });
 
 }
@@ -185,7 +185,7 @@ function rellenarCiudades() {
                 var email = "'" + localStorage.getItem("email") + "'";
                 var lat = data[i].latitud;
                 var long = data[i].longitud;
-                var texto = '<a onclick="datosTiempo(' + lat + ',' + long + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+                var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
                 texto += '<input id="radio1" type="radio" name="estrellas" value="5" onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="radio1"> 🗑</label>'
 
                 listaCiudades.innerHTML += separador;
@@ -195,14 +195,32 @@ function rellenarCiudades() {
         });
 }
 
-function datosTiempo(lat, long) {
-    var datosTiempoGeneral1Semana = tiempoGeneral1Semana(lat, long);
-    var datosTemperatura1Dia = temperatura1Dia(lat, long);
-    var datosPrecipitaciones1Dia = precipitaciones1Dia(lat, long);
-    var datosTiempoAhora = tiempoAhora(lat, long);
+function datosTiempo(nombre, lat, long) {
+    if (nombre != null) {
+        var datosTiempoTexto = '<div><h2 id="datos-ciudad">' + nombre + " " + lat + " " + long + '</h2></div>';
+        document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
+    }
+
+    var parrafo = "<h3>El tiempo actual en " + nombre + " es: </h3>"
+    document.getElementById("datos-tiempo").innerHTML += parrafo;
+
+    var actual = "<div id='actual' class='actual'></div>"
+    document.getElementById("datos-tiempo").innerHTML += actual;
+
+    
+    var tempAct = "<div class='temp-act'><h1 id='temp-actual'></h1></div>"
+    document.getElementById("actual").innerHTML += tempAct;
+
+    var tiempoGeneral = "<div class='general-act'><h1 id='tiemp-general'></h1></div>"
+    document.getElementById("actual").innerHTML += tiempoGeneral;
+
+    tiempoGeneral1Semana(lat, long);
+    temperatura1Dia(lat, long);
+    precipitaciones1Dia(lat, long);
+    tiempoAhora(lat, long);
 
 }
-
+/*
 function generarGrafico(titulo, datos){
     var datosTiempoText = document.getElementById("datos-tiempo");
     datosTiempoText.innerHTML += '<canvas id="myChart"></canvas>'
@@ -226,17 +244,20 @@ function generarGrafico(titulo, datos){
         data: data
     })
 }
-
+*/
 function tiempoAhora(lat, long) {
     var url = "http://localhost:8030/tiempoAhora/" + lat + "_" + long;
-    var devuelve = "";
     fetch(url, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+            console.log(data);
+            document.getElementById("temp-actual").innerText = "Temperatura : " + data.temperature + "ºC";
+            document.getElementById("tiemp-general").innerText = "Tiempo general : " + data.weathercode;
+
         });
+
 }
 
 function tiempoGeneral1Semana(lat, long) {
@@ -260,7 +281,6 @@ function temperatura1Dia(lat, long) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            generarGrafico('Evolución de la temperatura', data);
         });
 }
 
