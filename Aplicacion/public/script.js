@@ -1,5 +1,5 @@
 function buscar() {
-    var ciudad = document.getElementById('caja-busqueda').value;
+    var ciudad = document.getElementById('searchTextField').value;
     var url = "http://localhost:8050/coordenadas";
     fetch(url, {
         method: 'POST',
@@ -130,7 +130,6 @@ function cargarPagina() {
         document.getElementById("nombre-usuario").innerText = nombreStorage;
         rellenarCiudades();
     }
-
 }
 
 
