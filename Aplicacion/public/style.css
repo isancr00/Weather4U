@@ -167,6 +167,9 @@ button {
 .left-div {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  margin-top: 10px;
 }
 
 label {
@@ -178,10 +181,6 @@ input[type="radio"] {
 }
 
 .estrella:hover {
-  color: orange;
-}
-
-.estrella-marcada {
   color: orange;
 }
 
@@ -206,6 +205,8 @@ ul {
 
 .ciudades hr {
   margin: 5px 0;
-  border: none;
-  border-top: 1px solid #ccc;
+}
+
+.right-div h2,h1,h3{
+  text-align: center;
 }

@@ -47,27 +47,6 @@ async function tiempoAhora(coordenadas, res) {
   });
 }
 
-async function tiempoGeneral1Semana(coordenadas, res) {
-
-  var coordenadasSplit = coordenadas.split('_');
-  var latitud = coordenadasSplit[0];
-  var longitud = coordenadasSplit[1];
-
-  const url = " https://api.open-meteo.com/v1/forecast?latitude=" + latitud + '&longitude=' + longitud + "&daily=weathercode&timezone=auto";
-  console.log(url);
-
-  peticionGet(url, (error, data) => {
-    if (error) {
-      console.error(error);
-    } else {
-      var resultado_json = JSON.parse(data);
-      var resultado = {datos: resultado_json.daily.weathercode, dias: resultado_json.daily.time};
-      res.send(resultado);
-    }
-  });
-
-}
-
 
 async function temperatura1Dia(coordenadas, res) {
   var coordenadasSplit = coordenadas.split('_');

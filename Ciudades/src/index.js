@@ -9,6 +9,7 @@ adminRouter.post("/coordenadas", function (req, res) {
 
 adminRouter.post("/ciudadFav", function (req, res) {
     ciudadFavorita(req.body.nombreCiudad, req.body.latitud, req.body.longitud, req.body.email);
+    res.status(200).send();
 });
 
 adminRouter.post("/ciudades", function (req, res) {
@@ -17,6 +18,7 @@ adminRouter.post("/ciudades", function (req, res) {
 
 adminRouter.post("/eliminarCiudad", function (req, res) {
     eliminarCiudad(req.body.email, req.body.ciudad);
+    res.status(200).send();
 })
 
 

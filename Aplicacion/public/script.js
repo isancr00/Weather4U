@@ -20,6 +20,7 @@ function buscar() {
             }
             document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
             datosTiempo(ciudad, lat, long, null);
+
         });
 
 }
@@ -158,13 +159,15 @@ function marcarComoFav() {
         method: 'POST',
         body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, email: localStorage.getItem("email") }),
         headers: { 'Content-Type': 'application/json' }
-    })
+    }).then(function(response){
+        rellenarCiudades();
+    });
 }
 
 function rellenarCiudades() {
     var url = "http://localhost:8050/ciudades";
     var listaCiudades = document.getElementById("ciudades");
-    listaCiudades.innerHTML = "";
+    listaCiudades.innerHTML = "<h3>Lista de ciudades favoritas</h3>";
     fetch(url, {
         method: 'POST',
         body: JSON.stringify({ email: localStorage.getItem("email") }),
@@ -229,15 +232,6 @@ function datosTiempo(nombre, lat, long, estrella) {
     var graficoPrecSemana = "<div id ='prec-semana' class='prec-dia'><canvas id = 'precSemanaChart'></canvas></div>"
     document.getElementById("semana").innerHTML += graficoPrecSemana;
 
-    //Tabla evolucion semana
-
-    var tabla = "<div id = 'tabla'></div>";
-    document.getElementById("datos-tiempo").innerHTML += tabla;
-
-    
-
-
-    tiempoGeneral1Semana(lat, long);
     temperatura1Semana(lat, long);
     precipitaciones1Semana(lat, long);
     temperatura1Dia(lat, long);
@@ -246,7 +240,24 @@ function datosTiempo(nombre, lat, long, estrella) {
 
 }
 
-function temperatura1Semana(lat,long){
+function transformarDias(fechasOriginales){
+    var devuelve = [];
+
+    for(i=0;i<7;i++){
+        var fecha = new Date(fechasOriginales[i]);
+        var dia = fecha.getDate();
+        var mes = fecha.getMonth() + 1;
+        var año = fecha.getFullYear();
+
+        var fechaFinal = dia + '/' + mes + '/' + año;
+
+        devuelve.push(fechaFinal);
+    }
+
+    return devuelve;
+}
+
+function temperatura1Semana(lat, long) {
     var url = "http://localhost:8030/temperaturaSemana/" + lat + "_" + long;
 
     fetch(url, {
@@ -255,7 +266,7 @@ function temperatura1Semana(lat,long){
         .then(response => response.json())
         .then(data => {
             var ctx = document.getElementById('tempSemanaChart').getContext('2d');
-            const dias = data.dias;
+            const dias = transformarDias(data.dias);
 
             var opciones = {
                 scales: {
@@ -300,7 +311,7 @@ function temperatura1Semana(lat,long){
         });
 }
 
-function precipitaciones1Semana(lat,long){
+function precipitaciones1Semana(lat, long) {
     var url = "http://localhost:8030/precipitacionesSemana/" + lat + "_" + long;
 
     fetch(url, {
@@ -310,8 +321,8 @@ function precipitaciones1Semana(lat,long){
         .then(data => {
 
             var ctx = document.getElementById('precSemanaChart').getContext('2d');
-            const dias = data.dias;
-
+            const dias = transformarDias(data.dias);
+            
             var opciones = {
                 scales: {
                     x: {
@@ -333,7 +344,7 @@ function precipitaciones1Semana(lat,long){
             var datos = {
                 labels: dias,
                 datasets: [{
-                    label: "Evolución precipitaciones 24 horas",
+                    label: "Evolución precipitaciones 1 semana",
                     data: data.datos,
                     borderWidth: 1,
                     borderColor: 'rgb(75, 192, 192)',
@@ -408,16 +419,6 @@ function tiempoAhora(lat, long) {
 
 }
 
-function tiempoGeneral1Semana(lat, long) {
-    var url = "http://localhost:8030/tiempo/" + lat + "_" + long;
-
-    fetch(url, {
-        method: 'GET'
-    })
-        .then(response => response.json())
-        .then(data => {
-        });
-}
 
 function temperatura1Dia(lat, long) {
     var url = "http://localhost:8030/temperaturaDia/" + lat + "_" + long;
@@ -527,7 +528,7 @@ function eliminarCiudad(nombreCiudad, email) {
         method: 'POST',
         body: JSON.stringify({ ciudad: nombreCiudad, email: email }),
         headers: { 'Content-Type': 'application/json' }
-    })
-    rellenarCiudades();
-
+    }).then(function(response){
+        rellenarCiudades();
+    });
 }
