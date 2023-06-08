@@ -128,8 +128,9 @@ function cargarPagina() {
             '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';
         elementosDer.innerHTML = html;
         document.getElementById("nombre-usuario").innerText = nombreStorage;
-        rellenarCiudades();
     }
+
+    rellenarCiudades();
 }
 
 
@@ -158,7 +159,7 @@ function marcarComoFav() {
         method: 'POST',
         body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, email: localStorage.getItem("email") }),
         headers: { 'Content-Type': 'application/json' }
-    }).then(function(response){
+    }).then(function (response) {
         rellenarCiudades();
     });
 }
@@ -166,33 +167,87 @@ function marcarComoFav() {
 function rellenarCiudades() {
     var url = "http://localhost:8050/ciudades";
     var listaCiudades = document.getElementById("ciudades");
-    listaCiudades.innerHTML = "<h3>Lista de ciudades favoritas</h3>";
-    fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({ email: localStorage.getItem("email") }),
-        headers: { 'Content-Type': 'application/json' }
-    })
+    if (localStorage.getItem("email") != null) {
+        listaCiudades.innerHTML = "<h3>Lista de ciudades favoritas</h3>";
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({ email: localStorage.getItem("email") }),
+            headers: { 'Content-Type': 'application/json' }
+        })
 
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
 
-            var separador = "<hr>";
-            for (i = 0; i < data.length; i++) {
-                var nombreCiudad = data[i].nombreCiudad;
-                var ciudad = "'" + data[i].nombreCiudad + "'";
+                var separador = "<hr>";
+                for (i = 0; i < data.length; i++) {
+                    var nombreCiudad = data[i].nombreCiudad;
+                    var ciudad = "'" + data[i].nombreCiudad + "'";
 
-                var email = "'" + localStorage.getItem("email") + "'";
-                var lat = data[i].latitud;
-                var long = data[i].longitud;
-                var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-                texto += '<input id="' + nombreCiudad + '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="' + nombreCiudad + '">  🗑</label>'
+                    var email = "'" + localStorage.getItem("email") + "'";
+                    var lat = data[i].latitud;
+                    var long = data[i].longitud;
+                    var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+                    texto += '<input id="' + nombreCiudad + '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + email + ')"><label for="' + nombreCiudad + '">  🗑</label>'
 
-                listaCiudades.innerHTML += separador;
-                listaCiudades.innerHTML += texto;
-            }
+                    listaCiudades.innerHTML += separador;
+                    listaCiudades.innerHTML += texto;
+                }
 
-        });
+            });
+    } else {
+        listaCiudades.innerHTML = "<h3>Ciudades recomendadas</h3>";
+        
+        var separador = "<hr>";
+        listaCiudades.innerHTML += separador;
+        var nombreCiudad = "'Ámsterdam, Países Bajos'"
+        var lat =  52.3675734;
+        var long = 4.9041389;
+        var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+        listaCiudades.innerHTML  += texto;
+
+        var separador = "<hr>";
+        listaCiudades.innerHTML += separador;
+        var nombreCiudad = "'Londres, Reino Unido'"
+        var lat =  51.5072178;
+        var long = -0.1275862;
+        var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+        listaCiudades.innerHTML += texto;
+
+        var separador = "<hr>";
+        listaCiudades.innerHTML += separador;
+        var nombreCiudad = "'París, Francia'"
+        var lat =  48.856614 ;
+        var long = 2.3522219;
+        var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+        listaCiudades.innerHTML += texto;
+
+        var separador = "<hr>";
+        listaCiudades.innerHTML += separador;
+        var nombreCiudad = "'Tokio, Japón'"
+        var lat =  35.6761919;
+        var long = 139.6503106;
+        var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+        listaCiudades.innerHTML += texto;
+
+        var separador = "<hr>";
+        listaCiudades.innerHTML += separador;
+        var nombreCiudad = "'Madrid, España'"
+        var lat =  40.4167754;
+        var long = -3.7037902;
+        var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+        listaCiudades.innerHTML += texto;     
+        
+        var separador = "<hr>";
+        listaCiudades.innerHTML += separador;
+        var nombreCiudad = "'Barcelona, España'"
+        var lat =  41.3873974;
+        var long = 2.168568;
+        var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+        listaCiudades.innerHTML += texto;     
+        listaCiudades.innerHTML += separador;
+    }
+
 }
 
 function datosTiempo(nombre, lat, long, estrella) {
@@ -239,10 +294,10 @@ function datosTiempo(nombre, lat, long, estrella) {
 
 }
 
-function transformarDias(fechasOriginales){
+function transformarDias(fechasOriginales) {
     var devuelve = [];
 
-    for(i=0;i<7;i++){
+    for (i = 0; i < 7; i++) {
         var fecha = new Date(fechasOriginales[i]);
         var dia = fecha.getDate();
         var mes = fecha.getMonth() + 1;
@@ -321,7 +376,7 @@ function precipitaciones1Semana(lat, long) {
 
             var ctx = document.getElementById('precSemanaChart').getContext('2d');
             const dias = transformarDias(data.dias);
-            
+
             var opciones = {
                 scales: {
                     x: {
@@ -527,7 +582,7 @@ function eliminarCiudad(nombreCiudad, email) {
         method: 'POST',
         body: JSON.stringify({ ciudad: nombreCiudad, email: email }),
         headers: { 'Content-Type': 'application/json' }
-    }).then(function(response){
+    }).then(function (response) {
         rellenarCiudades();
     });
 }
