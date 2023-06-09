@@ -27,6 +27,10 @@ adminRouter.get('/tiempo/:coordenadas', function (req, res) {
   tiempoGeneral1Semana(req.params.coordenadas, res);
 });
 
+adminRouter.get('/amanecerAtardecer/:coordenadas', function (req, res) {
+  amanecerAtardecer(req.params.coordenadas, res);
+})
+
 app.use(adminRouter);
 
 async function tiempoAhora(coordenadas, res) {
@@ -96,7 +100,7 @@ async function temperatura1Semana(coordenadas, res) {
       console.error(error);
     } else {
       var resultado_json = JSON.parse(data);
-      var resultado = {dias: resultado_json.daily.time,max: resultado_json.daily.temperature_2m_max, min:resultado_json.daily.temperature_2m_min };
+      var resultado = { dias: resultado_json.daily.time, max: resultado_json.daily.temperature_2m_max, min: resultado_json.daily.temperature_2m_min };
       res.send(resultado);
     }
   });
@@ -113,10 +117,28 @@ async function precipitaciones1Semana(coordenadas, res) {
       console.error(error);
     } else {
       var resultado_json = JSON.parse(data);
-      var resultado = {datos: resultado_json.daily.precipitation_probability_max, dias: resultado_json.daily.time};
+      var resultado = { datos: resultado_json.daily.precipitation_probability_max, dias: resultado_json.daily.time };
       res.send(resultado);
     }
   });
+
+}
+
+async function amanecerAtardecer(coordenadas, res) {
+  var coordenadasSplit = coordenadas.split('_');
+  var latitud = coordenadasSplit[0];
+  var longitud = coordenadasSplit[1];
+  var url = "https://api.sunrise-sunset.org/json?lat=" + latitud + "&lng=" + longitud + "&formatted=0";
+
+  peticionGet(url, (error, data) => {
+    if (error){
+      console.error(error);
+    }else{
+      var resultado_json = JSON.parse(data);
+      var resultado = {amanecer : resultado_json.results.sunrise, atardecer: resultado_json.results.sunset};
+      res.send(resultado);
+    }
+  })
 
 }
 

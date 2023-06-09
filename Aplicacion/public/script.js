@@ -197,19 +197,19 @@ function rellenarCiudades() {
             });
     } else {
         listaCiudades.innerHTML = "<h3>Ciudades recomendadas</h3>";
-        
+
         var separador = "<hr>";
         listaCiudades.innerHTML += separador;
         var nombreCiudad = "'Ámsterdam, Países Bajos'"
-        var lat =  52.3675734;
+        var lat = 52.3675734;
         var long = 4.9041389;
         var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-        listaCiudades.innerHTML  += texto;
+        listaCiudades.innerHTML += texto;
 
         var separador = "<hr>";
         listaCiudades.innerHTML += separador;
         var nombreCiudad = "'Londres, Reino Unido'"
-        var lat =  51.5072178;
+        var lat = 51.5072178;
         var long = -0.1275862;
         var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
         listaCiudades.innerHTML += texto;
@@ -217,7 +217,7 @@ function rellenarCiudades() {
         var separador = "<hr>";
         listaCiudades.innerHTML += separador;
         var nombreCiudad = "'París, Francia'"
-        var lat =  48.856614 ;
+        var lat = 48.856614;
         var long = 2.3522219;
         var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
         listaCiudades.innerHTML += texto;
@@ -225,7 +225,7 @@ function rellenarCiudades() {
         var separador = "<hr>";
         listaCiudades.innerHTML += separador;
         var nombreCiudad = "'Tokio, Japón'"
-        var lat =  35.6761919;
+        var lat = 35.6761919;
         var long = 139.6503106;
         var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
         listaCiudades.innerHTML += texto;
@@ -233,18 +233,18 @@ function rellenarCiudades() {
         var separador = "<hr>";
         listaCiudades.innerHTML += separador;
         var nombreCiudad = "'Madrid, España'"
-        var lat =  40.4167754;
+        var lat = 40.4167754;
         var long = -3.7037902;
         var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-        listaCiudades.innerHTML += texto;     
-        
+        listaCiudades.innerHTML += texto;
+
         var separador = "<hr>";
         listaCiudades.innerHTML += separador;
         var nombreCiudad = "'Barcelona, España'"
-        var lat =  41.3873974;
+        var lat = 41.3873974;
         var long = 2.168568;
         var texto = '<a onclick="datosTiempo(' + nombreCiudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-        listaCiudades.innerHTML += texto;     
+        listaCiudades.innerHTML += texto;
         listaCiudades.innerHTML += separador;
     }
 
@@ -267,6 +267,15 @@ function datosTiempo(nombre, lat, long, estrella) {
 
     var tiempoGeneral = "<div class='general-act'><h1 id='tiemp-general'></h1></div>"
     document.getElementById("actual").innerHTML += tiempoGeneral;
+
+    var amaAta = "<div id='amanecer-atardecer' class='amanecer-atardecer'></div>"
+    document.getElementById("datos-tiempo").innerHTML += amaAta;
+
+    var amanecer = "<div class='amanecer'><h1 id='hora-amanecer'></h1></div>"
+    document.getElementById("amanecer-atardecer").innerHTML += amanecer;
+
+    var atardecer = "<div class='atardecer'><h1 id='hora-atardecer'></h1></div>"
+    document.getElementById("amanecer-atardecer").innerHTML += atardecer;
 
     var dia = "<div id='dia' class = 'dia'></div>";
     document.getElementById("datos-tiempo").innerHTML += dia;
@@ -291,8 +300,11 @@ function datosTiempo(nombre, lat, long, estrella) {
     temperatura1Dia(lat, long);
     precipitaciones1Dia(lat, long);
     tiempoAhora(lat, long);
+    amanecerAtardecer(lat, long);
 
 }
+
+
 
 function transformarDias(fechasOriginales) {
     var devuelve = [];
@@ -310,6 +322,29 @@ function transformarDias(fechasOriginales) {
 
     return devuelve;
 }
+
+
+function amanecerAtardecer(lat, long) {
+    var url = "http://localhost:8030/amanecerAtardecer/" + lat + "_" + long;
+    fetch(url, {
+        method: 'GET'
+    })
+
+        .then(response => response.json())
+        .then(data => {
+            var amanecer = new Date(data.amanecer);
+            var atardecer = new Date(data.atardecer);
+
+            var amanecerFormateado = amanecer.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
+            var atardecerFormateado = atardecer.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+            document.getElementById("hora-amanecer").innerText += "Hora de amanecer: " + amanecerFormateado;
+            document.getElementById("hora-atardecer").innerText += "Hora de atardecer: " + atardecerFormateado;
+
+        });
+
+}
+
 
 function temperatura1Semana(lat, long) {
     var url = "http://localhost:8030/temperaturaSemana/" + lat + "_" + long;

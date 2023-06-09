@@ -144,11 +144,11 @@ button {
   display: flex;
 }
 
-.temp-act {
-  width: 50%;
+.amanecer-atardecer{
+  display: flex;
 }
 
-.general-act {
+.amanecer, .atardecer , .temp-act, .general-act {
   width: 50%;
 }
 
