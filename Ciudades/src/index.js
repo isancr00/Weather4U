@@ -8,16 +8,16 @@ adminRouter.post("/coordenadas", function (req, res) {
 });
 
 adminRouter.post("/ciudadFav", function (req, res) {
-    ciudadFavorita(req.body.nombreCiudad, req.body.latitud, req.body.longitud, req.body.email);
+    ciudadFavorita(req.body.nombreCiudad, req.body.latitud, req.body.longitud, req.body.token);
     res.status(200).send();
 });
 
 adminRouter.post("/ciudades", function (req, res) {
-    getCiudades(req.body.email, res);
+    getCiudades(req.body.token, res);
 })
 
 adminRouter.post("/eliminarCiudad", function (req, res) {
-    eliminarCiudad(req.body.email, req.body.ciudad);
+    eliminarCiudad(req.body.token, req.body.ciudad);
     res.status(200).send();
 })
 
@@ -25,8 +25,8 @@ adminRouter.post("/eliminarCiudad", function (req, res) {
 
 app.use(adminRouter);
 
-function getCiudades(email, res) {
-    var url = "http://bbdd:7000/ciudades/" + email;
+function getCiudades(token, res) {
+    var url = "http://bbdd:7000/ciudades/" + token;
 
     axios.get(url)
         .then(function (response) {
@@ -45,14 +45,13 @@ function getCoordenadas(ciudad, res) {
         });
 }
 
-function ciudadFavorita(ciudad, latitud, longitud, email) {
-    var url = "http://bbdd:7000/addCiudad/" + ciudad + "_" + latitud + "_" + longitud + "_" + email;
-    console.log(url);
+function ciudadFavorita(ciudad, latitud, longitud, token) {
+    var url = "http://bbdd:7000/addCiudad/" + ciudad + "_" + latitud + "_" + longitud + "_" + token;
     axios.get(url);
 }
 
-function eliminarCiudad(email, ciudad) {
-    var url = "http://bbdd:7000/eliminarCiudad/" + email + "_" + ciudad;
+function eliminarCiudad(token, ciudad) {
+    var url = "http://bbdd:7000/eliminarCiudad/" + token + "_" + ciudad;
     console.log(url);
     axios.get(url);
 }
