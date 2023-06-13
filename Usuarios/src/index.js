@@ -10,6 +10,11 @@ adminRouter.post('/comprobarUsuario', function (req, res) {
     comprobarUsuario(req.body.email, res);
 });
 
+adminRouter.post('/comprobarCaducidadToken', function (req, res) {
+    comprobarCaducidadToken(req.body.token, res);
+});
+
+
 adminRouter.post('/nombreToken', function (req, res) {
     nombreToken(req.body.token, res);
 });
@@ -27,6 +32,18 @@ adminRouter.post('/registrarUsuario', function (req, res) {
 });
 
 app.use(adminRouter);
+
+function comprobarCaducidadToken(token,res){
+    var url = "http://bbdd:7000/comprobarCaducidadToken/" + token;
+    //Aqui va la peticion
+
+    axios.get(url)
+        .then(function (response) {
+            const data = response.data;
+            console.log(data);
+            res.send(data);
+        });
+}
 
 function registrarUsuario(nombre, email, contraseña, res) {
     var payload = {

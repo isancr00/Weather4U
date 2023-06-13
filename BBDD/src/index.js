@@ -9,6 +9,10 @@ adminRouter.get('/iniciarSesion/:datos', function (req, res) {
     iniciarSesion(req.params.datos, res);
 })
 
+adminRouter.get('/comprobarCaducidadToken/:datos', function (req, res) {
+    comprobarCaducidadToken(req.params.datos, res);
+})
+
 
 adminRouter.get('/eliminarToken/:datos', function (req, res) {
     eliminarToken(req.params.datos);
@@ -55,6 +59,25 @@ const usuarioEsquema = new mongoose.Schema({
 
 const Usuario = new mongoose.model('Usuario', usuarioEsquema);
 
+
+async function comprobarCaducidadToken(datos, res) {
+    const result = await Usuario.find({ token: datos });
+    var fechaActual = new Date();
+    var decodedToken = jwt.decode(datos);
+    var fechaToken = new Date(decodedToken.exp * 1000); 
+    console.log(result);
+    if (fechaActual >= fechaToken) {
+        //Token caducado ponerle vacio
+        result[0].token = "";
+        result[0].save();
+        res.send(JSON.stringify({ token: "" }))
+    } else {
+        res.send(JSON.stringify({ token: result[0].token }));
+
+    }
+}
+
+
 async function eliminarToken(datos) {
     const result = await Usuario.find({ token: datos });
     result[0].token = "";
@@ -88,10 +111,8 @@ async function iniciarSesion(datos, res) {
 
 
             if (fecha >= fechaToken) {
-                
-
                 result[0].token = token;
-                result[0].save;
+                result[0].save();
 
                 res.send(JSON.stringify({ token: token }));
             } else {
@@ -99,7 +120,7 @@ async function iniciarSesion(datos, res) {
             }
         } else {
             result[0].token = token;
-            result[0].save;
+            result[0].save();
             res.send({ token: token });
         }
 

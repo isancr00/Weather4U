@@ -11,16 +11,33 @@ function buscar() {
             var lat = data.lat;
             var long = data.lng;
             var token = localStorage.getItem("token");
-            var datosTiempoTexto = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
-            if (token != null) {
-                var estrella = '<input id="radio1" type="radio" name="estrellas"  onclick="marcarComoFav()"><label for="radio1" class = "estrella"> ★</label></div></h2>';
-                datosTiempoTexto += estrella;
-            } else {
-                datosTiempoTexto += "</h2></div>";
-            }
-            document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
-            datosTiempo(ciudad, lat, long, null);
+            var url1 = "http://localhost:8040/comprobarCaducidadToken";
 
+            fetch(url1, {
+                method: 'POST',
+                body: JSON.stringify({ token: token }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token != "") {
+
+                        var datosTiempoTexto = '<div><h2 id="datos-ciudad">' + ciudad + " " + lat + " " + long;
+                        if (token != null) {
+                            var estrella = '<input id="radio1" type="radio" name="estrellas"  onclick="marcarComoFav()"><label for="radio1" class = "estrella"> ★</label></div></h2>';
+                            datosTiempoTexto += estrella;
+                        } else {
+                            datosTiempoTexto += "</h2></div>";
+                        }
+                        document.getElementById("datos-tiempo").innerHTML = datosTiempoTexto;
+                        datosTiempo(ciudad, lat, long, null);
+
+                    } else {
+                        alert("La sesión ha caducado");
+                        cerrarSesion();
+                        location.href = '/index.html';
+                    }
+                })
         });
 
 }
@@ -117,28 +134,42 @@ function registro() {
 function cargarPagina() {
     var token = localStorage.getItem("token");
     if (token != null) {
-        var elementosDer = document.getElementById("elementos-der");
-        var html = '<li><a href="index.html">Inicio</a>' +
-            '</li><li><a href="info.html">Acerca de</a></li>' +
-            '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';
-        elementosDer.innerHTML = html;
+        var url1 = "http://localhost:8040/comprobarCaducidadToken";
 
-        var url = "http://localhost:8040/nombreToken"
-
-        fetch(url, {
+        fetch(url1, {
             method: 'POST',
             body: JSON.stringify({ token: token }),
             headers: { 'Content-Type': 'application/json' }
         })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("nombre-usuario").innerText = data.nombre;
-                rellenarCiudades();
-            })
+                if (data.token != "") {
+                    var elementosDer = document.getElementById("elementos-der");
+                    var html = '<li><a href="index.html">Inicio</a>' +
+                        '</li><li><a href="info.html">Acerca de</a></li>' +
+                        '<li><a href="index.html" onclick="cerrarSesion()">Cerrar Sesión</a></li>';
+                    elementosDer.innerHTML = html;
+
+                    var url = "http://localhost:8040/nombreToken"
+
+                    fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify({ token: token }),
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById("nombre-usuario").innerText = data.nombre;
+                            rellenarCiudades();
+                        })
+                } else {
+                    alert("La sesión ha caducado");
+                    cerrarSesion();
+                }
+            });
     }
 
     rellenarCiudades();
-
 }
 
 
@@ -172,46 +203,79 @@ function marcarComoFav() {
         ciudad += datosSplit[i] + " ";
     }
 
-    fetch(url, {
+    var url1 = "http://localhost:8040/comprobarCaducidadToken";
+
+    fetch(url1, {
         method: 'POST',
-        body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, token: localStorage.getItem("token") }),
+        body: JSON.stringify({ token: token }),
         headers: { 'Content-Type': 'application/json' }
-    }).then(function (response) {
-        rellenarCiudades();
-    });
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.token != "") {
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ nombreCiudad: ciudad, latitud: latitud, longitud: longitud, token: localStorage.getItem("token") }),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function (response) {
+                    rellenarCiudades();
+                });
+            } else {
+                alert("La sesión ha caducado");
+                cerrarSesion();
+            }
+        });
 }
 
 function rellenarCiudades() {
     var url = "http://localhost:8050/ciudades";
     var listaCiudades = document.getElementById("ciudades");
     if (localStorage.getItem("token") != null) {
-        listaCiudades.innerHTML = "<h3>Lista de ciudades favoritas</h3>";
-        fetch(url, {
+
+        var url1 = "http://localhost:8040/comprobarCaducidadToken";
+
+        fetch(url1, {
             method: 'POST',
             body: JSON.stringify({ token: localStorage.getItem("token") }),
             headers: { 'Content-Type': 'application/json' }
         })
-
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                if (data.token != "") {
+                    listaCiudades.innerHTML = "<h3>Lista de ciudades favoritas</h3>";
+                    fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify({ token: localStorage.getItem("token") }),
+                        headers: { 'Content-Type': 'application/json' }
+                    })
 
-                var separador = "<hr>";
-                for (i = 0; i < data.length; i++) {
-                    var nombreCiudad = data[i].nombreCiudad;
-                    var ciudad = "'" + data[i].nombreCiudad + "'";
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
 
-                    var token = "'" + localStorage.getItem("token") + "'";
-                    var lat = data[i].latitud;
-                    var long = data[i].longitud;
-                    var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
-                    texto += '<input id="' + nombreCiudad + '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + token + ')"><label for="' + nombreCiudad + '">  🗑</label>'
+                            var separador = "<hr>";
+                            for (i = 0; i < data.length; i++) {
+                                var nombreCiudad = data[i].nombreCiudad;
+                                var ciudad = "'" + data[i].nombreCiudad + "'";
 
-                    listaCiudades.innerHTML += separador;
-                    listaCiudades.innerHTML += texto;
+                                var token = "'" + localStorage.getItem("token") + "'";
+                                var lat = data[i].latitud;
+                                var long = data[i].longitud;
+                                var texto = '<a onclick="datosTiempo(' + ciudad + ',' + lat + ',' + long + ',' + "'manolo'" + ')" class="elemento-ciudad">' + nombreCiudad + '</a>';
+                                texto += '<input id="' + nombreCiudad + '" type="radio" name="papelera"  onclick="eliminarCiudad(' + ciudad + ',' + token + ')"><label for="' + nombreCiudad + '">  🗑</label>'
+
+                                listaCiudades.innerHTML += separador;
+                                listaCiudades.innerHTML += texto;
+                            }
+
+                        });
+                } else {
+                    alert("La sesión ha caducado");
+                    cerrarSesion();
                 }
-
             });
+
+
     } else {
         listaCiudades.innerHTML = "<h3>Ciudades recomendadas</h3>";
 
@@ -630,11 +694,27 @@ function precipitaciones1Dia(lat, long) {
 function eliminarCiudad(nombreCiudad, token) {
     var url = "http://localhost:8050/eliminarCiudad";
 
-    fetch(url, {
+    fetch(url1, {
         method: 'POST',
-        body: JSON.stringify({ ciudad: nombreCiudad, token: token }),
+        body: JSON.stringify({ token: token }),
         headers: { 'Content-Type': 'application/json' }
-    }).then(function (response) {
-        rellenarCiudades();
-    });
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.token != "") {
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ ciudad: nombreCiudad, token: token }),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function (response) {
+                    rellenarCiudades();
+                });
+            } else {
+                alert("La sesión ha caducado");
+                cerrarSesion();
+            }
+        });
+
+
+
 }
