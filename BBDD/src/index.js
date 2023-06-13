@@ -80,8 +80,11 @@ async function comprobarCaducidadToken(datos, res) {
 
 async function eliminarToken(datos) {
     const result = await Usuario.find({ token: datos });
-    result[0].token = "";
-    result[0].save();
+
+    if(result.length != 0){
+        result[0].token = "";
+        result[0].save();
+    }
 }
 
 async function iniciarSesion(datos, res) {
