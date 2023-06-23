@@ -386,7 +386,6 @@ function datosTiempo(nombre, lat, long, estrella) {
 }
 
 
-
 function transformarDias(fechasOriginales) {
     var devuelve = [];
 
@@ -693,6 +692,7 @@ function precipitaciones1Dia(lat, long) {
 
 function eliminarCiudad(nombreCiudad, token) {
     var url = "http://localhost:8050/eliminarCiudad";
+    var url1 = "http://localhost:8040/comprobarCaducidadToken";
 
     fetch(url1, {
         method: 'POST',
