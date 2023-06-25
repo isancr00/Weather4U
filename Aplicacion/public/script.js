@@ -207,7 +207,7 @@ function marcarComoFav() {
 
     fetch(url1, {
         method: 'POST',
-        body: JSON.stringify({ token: token }),
+        body: JSON.stringify({ token: localStorage.getItem("token") }),
         headers: { 'Content-Type': 'application/json' }
     })
         .then(response => response.json())

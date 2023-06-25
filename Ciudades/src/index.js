@@ -51,7 +51,7 @@ function ciudadFavorita(ciudad, latitud, longitud, token) {
 }
 
 function eliminarCiudad(token, ciudad) {
-    var url = "http://bbdd:7000/eliminarCiudad/" + token + "_" + ciudad;
+    var url = "http://bbdd:7000/eliminarCiudad/" + ciudad + "_" + token;
     console.log(url);
     axios.get(url);
 }

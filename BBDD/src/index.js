@@ -154,8 +154,15 @@ async function añadirCiudad(datos) {
     var longitud = datosSplit[2];
     var latitud = datosSplit[1];
     var token = datosSplit[3];
+
+    if(datosSplit.length > 3){
+        for(i=4;i<datosSplit.length;i++){
+            token += "_" + datosSplit[i];
+        }
+    }
+
     var existe = false;
-    console.log(ciudad);
+
 
     const result = await Usuario.find({ token: token });
     var ciudades = result[0].ciudades;
@@ -177,8 +184,15 @@ async function añadirCiudad(datos) {
 
 async function eliminarCiudad(datos) {
     var datosSplit = datos.split("_");
-    var token = datosSplit[0];
-    var ciudad = datosSplit[1] + ' ';
+    var token = datosSplit[1];
+
+    if(datosSplit.length > 2){
+        for(i=2;i<datosSplit.length;i++){
+            token += "_" + datosSplit[i];
+        }
+    }
+
+    var ciudad = datosSplit[0];
     const result = await Usuario.find({ token: token });
 
     for (i = 0; i < result[0].ciudades.length; i++) {
