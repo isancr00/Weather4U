@@ -1,0 +1,32 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install SonarQube Scanner
+        run: npm install -g sonarqube-scanner
+
+      - name: Run SonarQube Analysis
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=Weather4U\
+            -Dsonar.projectName=Weather4U \
+            -Dsonar.sources=src \
+            -Dsonar.host.url=$SONARQUBE_HOST \
+            -Dsonar.login=$SONARQUBE_TOKEN
+
